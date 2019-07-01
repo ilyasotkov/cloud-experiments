@@ -1,0 +1,5 @@
+---
+- name: Bootstrap the local repository prior to provisioning a swarm.
+  hosts: localhost
+  roles:
+    - bootstrap

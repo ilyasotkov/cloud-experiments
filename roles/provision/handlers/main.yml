@@ -1,0 +1,12 @@
+- name: update tzdata
+  command: /usr/sbin/dpkg-reconfigure --frontend noninteractive tzdata
+
+- name: restart sshd
+  service:
+    name: sshd
+    state: restarted
+
+- name: restart ufw
+  service:
+    name: ufw
+    state: restarted

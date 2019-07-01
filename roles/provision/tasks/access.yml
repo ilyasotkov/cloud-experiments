@@ -1,0 +1,33 @@
+- name: Ensure user exists.
+  user:
+    name: "{{ node_user }}"
+    shell: /bin/bash
+    append: yes
+
+- name: Ensure all developer ssh keys are added to authorized keys file.
+  authorized_key:
+    user: "{{ node_user }}"
+    state: present
+    key: "{{ item }}"
+  with_file:
+    - /root/.ssh/id_rsa.pub
+
+- name: Ensure {{ node_user }} user has passwordless sudo privileges.
+  lineinfile:
+    dest: /etc/sudoers
+    state: present
+    regexp: '^{{ node_user }}'
+    line: '{{ node_user }} ALL=(ALL) NOPASSWD: ALL'
+
+- name: Ensure SSH provides only key authentication and does not permit root login.
+  lineinfile:
+    dest: /etc/ssh/sshd_config
+    regexp: "{{ item.regexp }}"
+    line: "{{ item.line }}"
+    state: present
+  with_items:
+    - regexp: "^PasswordAuthentication"
+      line: "PasswordAuthentication no"
+    - regexp: "^PermitRootLogin"
+      line: "PermitRootLogin no"
+  notify: restart sshd

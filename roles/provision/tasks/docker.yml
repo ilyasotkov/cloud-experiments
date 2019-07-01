@@ -1,0 +1,66 @@
+---
+- name: Ensure apt packages are upgraded.
+  apt:
+    update_cache: yes
+    upgrade: yes
+
+- name: Ensure all docker dependencies are present.
+  apt: name="{{ item }}" state=present
+  with_items:
+    - apt-transport-https
+    - ca-certificates
+    - curl
+    - gnupg-agent
+    - software-properties-common
+
+- name: Ensure Docker's official apt GPG key is present.
+  apt_key:
+    url: https://download.docker.com/linux/ubuntu/gpg
+    state: present
+
+- name: Ensure docker stable repository is present.
+  apt_repository:
+    repo: "deb [arch=amd64] https://download.docker.com/linux/{{ ansible_distribution|lower }} {{ ansible_distribution_release }} stable"
+    state: present
+
+- name: Ensure apt package index is updated and packages are upgraded.
+  apt:
+    update_cache: yes
+    upgrade: yes
+
+- name: Ensure docker-ce and docker-ce-cli packages are installed.
+  apt:
+    name: "{{ item }}={{ docker_version }}"
+    update_cache: yes
+    state: present
+  with_items:
+    - docker-ce
+    - docker-ce-cli
+
+- name: Ensure containerd.io package is installed.
+  apt:
+    name: containerd.io
+    update_cache: yes
+    state: present
+
+- name: Ensure Docker (service) is set to start on boot.
+  systemd:
+    name: docker
+    state: started
+    enabled: yes
+
+- name: Ensure the Docker Engine is working properly.
+  shell: docker run --rm hello-world
+  no_log: True
+
+- name: Ensure docker group exists
+  group:
+    name: docker
+    state: present
+
+- name: Ensure {{ node_user }} is in docker group.
+  user:
+    name: "{{ node_user }}"
+    shell: /bin/bash
+    groups: docker
+    append: yes

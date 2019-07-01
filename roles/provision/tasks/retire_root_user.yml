@@ -1,0 +1,13 @@
+- name: Change Ansible config if we just retired the root user.
+  delegate_to: localhost
+  run_once: true
+  block:
+    - lineinfile:
+        path: "{{ local_path }}/ansible.cfg"
+        regexp: "^ask_pass"
+        line: "ask_pass = False"
+    - replace:
+        path: "{{ local_path }}/inventory.yml"
+        regexp: "ansible_user: root"
+        replace: "ansible_user: {{ node_user }}"
+    - meta: end_play

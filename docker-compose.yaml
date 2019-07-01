@@ -1,0 +1,10 @@
+version: "3.7"
+
+services:
+  controller:
+    build: .
+    working_dir: /linode-swarm
+    volumes:
+    - .:/linode-swarm
+    - .terraformrc:/root/.terraformrc
+    - ./ssh:/root/.ssh

@@ -1,7 +1,7 @@
 version: "3.7"
 
 networks:
-  traefik_web:
+  web:
     external: true
   internal:
     external: false
@@ -11,12 +11,12 @@ services:
     image: nginx:latest
     restart: always
     networks:
-      - traefik_web
+      - web
       - internal
     deploy:
       labels:
         traefik.enable: "true"
-        traefik.docker.network: traefik_web
+        traefik.docker.network: web
         traefik.port: "80"
         traefik.frontend.rule: Host:app.flexp.xyz
         traefik.protocol: http

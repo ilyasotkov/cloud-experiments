@@ -2,6 +2,7 @@ version: "3.7"
 
 networks:
   web:
+    name: web
     external: false
 
 services:

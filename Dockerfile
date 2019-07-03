@@ -23,7 +23,7 @@ RUN apk --update add \
                 cffi \
                 pywinrm \
                 jmespath \
-        && pip install --quiet ansible==2.4.4.0 \
+        && pip install --quiet ansible==2.8.1 \
         && apk del build-dependencies \
         && rm -rf /var/cache/apk/* \
         && mkdir -p /etc/ansible \

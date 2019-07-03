@@ -1,0 +1,32 @@
+debug = false
+logLevel = "INFO"
+defaultEntryPoints = ["https", "http"]
+
+[entryPoints]
+  [entryPoints.dashboard]
+    address = ":8080"
+  [entryPoints.http]
+  address = ":80"
+    [entryPoints.http.redirect]
+    entryPoint = "https"
+  [entryPoints.https]
+  address = ":443"
+  [entryPoints.https.tls]
+
+[api]
+entrypoint="dashboard"
+
+[docker]
+endpoint = "unix:///var/run/docker.sock"
+exposedByDefault = false
+swarmMode = true
+network = "traefik_web"
+
+[acme]
+email = "i@pxl.fi"
+storage = "acme.json"
+entryPoint = "https"
+acmeLogging = true
+onHostRule = true
+  [acme.httpChallenge]
+  entryPoint = "http"

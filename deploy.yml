@@ -1,0 +1,39 @@
+---
+- name: Deploy Docker Swarm stacks
+  hosts: swarm_nodes
+  gather_facts: no
+  pre_tasks:
+    - delegate_to: localhost
+      shell: ansible-vault decrypt /root/.ssh/id_rsa
+  tasks:
+    - block:
+      - apt:
+          name:
+          - python-pkg-resources
+          - python-pip
+      - pip:
+          name:
+          - setuptools
+          - jsondiff
+          - pyyaml
+      - synchronize:
+          src: ./stacks/
+          dest: /stacks/
+      - file:
+          path: /acme.json
+          state: touch
+          mode: 0600
+      - docker_stack:
+          state: present
+          name: traefik
+          compose:
+          - /stacks/traefik.yaml
+      - docker_stack:
+          state: present
+          name: nginx-app
+          compose:
+          - /stacks/nginx-app.yaml
+      always:
+        - name: Encrypt private SSH key
+          delegate_to: localhost
+          shell: ansible-vault encrypt /root/.ssh/id_rsa

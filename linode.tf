@@ -5,15 +5,15 @@ resource "linode_sshkey" "controller" {
   label   = "controller"
 }
 
-resource "linode_instance" "swarm_node" {
-  label             = "swarm_node"
+resource "linode_instance" "swarm_leader" {
+  label             = "swarm_leader"
   type              = "g6-nanode-1"
   region            = "eu-central"
   private_ip        = false
   boot_config_label = "boot"
 
   group = "swarm"
-  tags  = ["swarm_node"]
+  tags  = ["swarm_node", "swarm_leader"]
 
   disk {
     label           = "boot"
@@ -38,20 +38,17 @@ resource "linode_instance" "swarm_node" {
 resource "linode_domain" "flexp_xyz" {
   type      = "master"
   domain    = "flexp.xyz"
-  soa_email = "soa@flexp.xyz"
+  soa_email = "i@pxl.fi"
 }
 
-resource "linode_domain_record" "arch_flexp_xyz" {
+resource "linode_domain_record" "app_flexp_xyz" {
   domain_id   = "${linode_domain.flexp_xyz.id}"
-  name        = "arch"
+  name        = "app"
   record_type = "A"
-  target      = "arch.flexp.xyz"
+  target      = "${linode_instance.swarm_leader.ip_address}"
   ttl_sec     = 300
-  expire_sec  = 300
-  retry_sec   = 300
-  refresh_sec = 300
 }
 
 output "swarm_node_ip_address" {
-  value = "${linode_instance.swarm_node.ip_address}"
+  value = "${linode_instance.swarm_leader.ip_address}"
 }

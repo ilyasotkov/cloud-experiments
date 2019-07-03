@@ -16,6 +16,7 @@
           dest: /acme.json
           force: no
           mode: 0600
+          decrypt: yes
       - docker_stack:
           state: present
           name: traefik

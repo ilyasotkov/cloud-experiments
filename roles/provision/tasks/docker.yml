@@ -5,13 +5,24 @@
     upgrade: yes
 
 - name: Ensure all docker dependencies are present.
-  apt: name="{{ item }}" state=present
-  with_items:
+  apt:
+    state: present
+    name:
     - apt-transport-https
     - ca-certificates
     - curl
     - gnupg-agent
     - software-properties-common
+    - python-pkg-resources
+    - python-pip
+
+- name: Install pip packages required for docker_stack Ansible module.
+  pip:
+    state: present
+    name:
+    - setuptools
+    - jsondiff
+    - pyyaml
 
 - name: Ensure Docker's official apt GPG key is present.
   apt_key:
@@ -30,12 +41,11 @@
 
 - name: Ensure docker-ce and docker-ce-cli packages are installed.
   apt:
-    name: "{{ item }}={{ docker_version }}"
-    update_cache: yes
     state: present
-  with_items:
-    - docker-ce
-    - docker-ce-cli
+    update_cache: yes
+    name:
+    - docker-ce={{ docker_version }}
+    - docker-ce-cli={{ docker_version }}
 
 - name: Ensure containerd.io package is installed.
   apt:

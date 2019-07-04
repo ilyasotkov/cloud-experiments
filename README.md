@@ -1,5 +1,7 @@
 # linode-swarm
 
+> ⚠️ This is a work in progress
+
 > This repository is the first part of me discovering alternatives for running extra-small containerized web applications on various cloud platforms. Linode is the first cloud platform because (as it usually happens) I already have some applications hosted on Linode.
 
 Run containerized web applications (without HA or 100% uptime) on cheapest possible infrastructure provided by Linode.

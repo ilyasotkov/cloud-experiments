@@ -1,16 +1,45 @@
 - hosts: nodes
   gather_facts: False
   tasks:
-  - name: install python 2
-    raw: test -e /usr/bin/python || (apt -y update && apt install -y python-minimal)
+    - name: install python 2
+      raw: test -e /usr/bin/python || (apt -y update && apt install -y python-minimal)
+  tags:
+    - linux
 
-- name: Provision hosts
+- hosts: nodes
+  tasks:
+    - debug:
+        var: leader_manager_advertise_addr
+  tags:
+    - debug
+
+- name: Run miscellaneous tasks for Linux
+  hosts: nodes
+  tasks:
+  - name: Set hostname
+    hostname:
+      name: "{{ ansible_host.split('.')[0] }}"
+  tags:
+    - linux
+
+- name: Harden Linux installation for improved security
   hosts: harden_linux
   roles:
     - githubixx-ansible-role-harden-linux
+  tags:
+    - linux
 
 - name: WireGuard VPN
   hosts: vpn
   roles:
     - role: githubixx-ansible-role-wireguard
       when: ansible_user != "root"
+  tags:
+    - wg
+
+- name: Install Docker and create a Docker Swarm cluster
+  hosts: nodes
+  roles:
+    - swarm
+  tags:
+    - swarm

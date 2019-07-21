@@ -8,6 +8,7 @@ all:
       ansible_host: linode-swarm-node-1.flexp.xyz
       wireguard_endpoint: linode-swarm-node-1.flexp.xyz
       wireguard_address: 10.8.0.101/24
+      docker_swarm_role: leader_manager
     worker1:
       ansible_host: linode-swarm-node-2.flexp.xyz
       wireguard_endpoint: linode-swarm-node-2.flexp.xyz
@@ -20,11 +21,16 @@ nodes:
     # ansible_user: deploy
     # ansible_become: yes
     ansible_ssh_private_key_file: /linode-swarm/.ssh/id_rsa
+    leader_manager_advertise_addr: "{{ hostvars.master1.ansible_wg0.ipv4.address }}"
   children:
-    masters:
+    managers:
+      vars:
+        docker_swarm_role: managers
       hosts:
         master1: {}
     workers:
+      vars:
+        docker_swarm_role: worker
       hosts:
         worker1: {}
 vpn:

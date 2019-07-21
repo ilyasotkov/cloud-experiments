@@ -7,3 +7,7 @@ terraform {
     }
   }
 }
+
+provider "linode" {
+  version = "1.7.0"
+}

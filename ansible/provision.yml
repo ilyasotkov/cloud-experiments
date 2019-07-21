@@ -1,0 +1,16 @@
+- hosts: nodes
+  gather_facts: False
+  tasks:
+  - name: install python 2
+    raw: test -e /usr/bin/python || (apt -y update && apt install -y python-minimal)
+
+- name: Provision hosts
+  hosts: harden_linux
+  roles:
+    - githubixx-ansible-role-harden-linux
+
+- name: WireGuard VPN
+  hosts: vpn
+  roles:
+    - role: githubixx-ansible-role-wireguard
+      when: ansible_user != "root"

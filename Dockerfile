@@ -32,14 +32,13 @@ RUN apk --update add \
 WORKDIR /linode-swarm
 ARG ANSIBLE_VAULT_PASSWORD
 
-ARG TERRAFORM_VERSION=0.11.13
+ARG TERRAFORM_VERSION=0.12.3
 RUN curl -o ./terraform.zip \
         https://releases.hashicorp.com/terraform/${TERRAFORM_VERSION}/terraform_${TERRAFORM_VERSION}_linux_amd64.zip \
         && unzip terraform.zip \
         && mv terraform /usr/bin \
         && rm -rf terraform.zip
-COPY . .
-# COPY ssh /root/.ssh
 
-COPY docker-entrypoint.sh /usr/local/bin/
-ENTRYPOINT [ "docker-entrypoint.sh" ]
+COPY ansible/requirements.yml ./ansible/
+RUN ansible-galaxy install -r ./ansible/requirements.yml
+COPY . .

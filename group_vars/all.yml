@@ -1,7 +1,0 @@
----
-python_version: 2
-local_path: /linode-swarm
-controller_ssh_key_comment: linode-swarm-controller
-node_user: ubuntu
-docker_version: 5:18.09.7~3-0~ubuntu-bionic
-security_autoupdate_mail_to: ilya@sotkov.com

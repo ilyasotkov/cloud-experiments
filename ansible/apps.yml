@@ -1,0 +1,74 @@
+---
+- name: Deploy apps to Docker Swarm cluster
+  hosts: master1
+  tasks:
+    - name: Copy all docker configuration to leader manager node
+      synchronize:
+        src: ../stacks/
+        dest: /stacks/
+        delete: yes
+    - local_action: stat path=../secrets/acme.json
+      register: acme_file_exists_locally
+    - when: not acme_file_exists_locally.stat.exists
+      file:
+        state: touch
+        path: /acme.json
+        mode: 0600
+    - when: acme_file_exists_locally.stat.exists
+      copy:
+        src: ../secrets/acme.json
+        dest: /acme.json
+        force: no
+        mode: 0600
+        decrypt: yes
+
+    - stat:
+        path: /stacks/configs/docker-registry/config.yaml
+      register: registry_config_file
+    - stat:
+        path: /stacks/configs/docker-registry/nginx.conf
+      register: registry_proxy_config_file
+    - stat:
+        path: /stacks/configs/traefik/config.toml
+      register: traefik_config_file
+    - debug:
+        var: registry_config_file
+
+    - name: Deploy traefik stack
+      docker_stack:
+        state: present
+        name: traefik
+        compose:
+        - /stacks/traefik.yaml
+      environment:
+        TRAEFIK_CONFIG_CHECKSUM: "{{ traefik_config_file.stat.checksum }}"
+    - name: Deploy docker-registry stack
+      docker_stack:
+        state: present
+        name: docker-registry
+        compose:
+        - /stacks/docker-registry.yaml
+      environment:
+        REGISTRY_CONFIG_CHECKSUM: "{{ registry_config_file.stat.checksum }}"
+        NGINX_CONFIG_CHECKSUM: "{{ registry_proxy_config_file.stat.checksum }}"
+    - name: Deploy nginx-app stack
+      docker_stack:
+        state: present
+        name: nginx-app
+        compose:
+        - /stacks/nginx-app.yaml
+
+    - name: Check if acme.json already exists
+      stat:
+        path: /acme.json
+      register: acme_json_exists
+    - name: Fetch acme.json
+      when: acme_json_exists.stat.exists
+      fetch:
+        src: /acme.json
+        dest: ../secrets/
+        flat: yes
+    - name: Encrypt acme.json
+      when: acme_json_exists.stat.exists
+      delegate_to: localhost
+      shell: ansible-vault encrypt ../secrets/acme.json

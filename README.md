@@ -72,3 +72,9 @@ During the execution of the playbook, we'll retire the `root` user and start usi
 ```sh
 ansible-playbook -v main.yml
 ```
+
+## Traefik Dashboard SSH Tunnel
+
+```sh
+ssh -L 8080:linode-swarm-node-1.flexp.xyz:8080 -i ./.ssh/id_rsa deploy@linode-swarm-node-1.flexp.xyz -N
+```

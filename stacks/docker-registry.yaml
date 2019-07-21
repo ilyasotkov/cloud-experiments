@@ -1,0 +1,55 @@
+version: "3.7"
+
+networks:
+  internal: {}
+  traefik:
+    external: true
+
+configs:
+  registry_config:
+    name: registry-config-${REGISTRY_CONFIG_CHECKSUM}
+    file: ./configs/docker-registry/config.yaml
+  nginx_config:
+    name: registry-nginx-config-${NGINX_CONFIG_CHECKSUM}
+    file: ./configs/docker-registry/nginx.conf
+
+volumes:
+  data: {}
+
+services:
+  proxy:
+    image: nginx:1.17.1
+    restart: always
+    networks:
+      - traefik
+      - internal
+    configs:
+      - source: nginx_config
+        target: /etc/nginx/nginx.conf
+    deploy:
+      labels:
+        traefik.enable: "true"
+        traefik.docker.network: traefik
+        traefik.port: "80"
+        traefik.frontend.rule: Host:r.flexp.xyz
+        traefik.protocol: http
+        # To create a new user:password pair:
+        # export HTPASSWD_USER=admin
+        # read -s HTPASSWD_PW
+        # export HTPASSWD_PW
+        # echo $(htpasswd -nbB $HTPASSWD_USER $HTPASSWD_PW) | sed -e s/\\$/\\$\\$/g
+        traefik.frontend.auth.basic.users: admin:$$2y$$05$$VQYShcIN2K.qfy0SV8vJpOUHMdeOzcDVcpMC08mhKobH8vQccnrhq
+
+  registry:
+    image: registry:2
+    volumes:
+      - data:/var/lib/registry
+    networks:
+      - internal
+    configs:
+      - source: registry_config
+        target: /etc/docker/registry/config.yml
+    deploy:
+      replicas: 1
+      restart_policy:
+        condition: on-failure

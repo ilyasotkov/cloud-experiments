@@ -2,3 +2,4 @@
 .terraform/
 .terraformrc
 .ssh/
+secrets/

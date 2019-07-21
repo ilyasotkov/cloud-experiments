@@ -6,6 +6,11 @@ variable "node_count" {
   default = 2
 }
 
+variable "app_domain_names" {
+  type    = list
+  default = ["nginx-app", "app", "flexp", "ci", "r", "p", "api"]
+}
+
 locals {
   linode_boot_config_label = "boot-config"
 }
@@ -68,6 +73,16 @@ resource "linode_domain_record" "node_hostnames" {
   record_type = "A"
   ttl_sec     = 300
   target      = element(linode_instance.nodes[*].ip_address, count.index)
+}
+
+resource "linode_domain_record" "apps" {
+  count = length(var.app_domain_names)
+
+  domain_id   = linode_domain.flexp_xyz.id
+  name        = element(var.app_domain_names, count.index)
+  record_type = "A"
+  ttl_sec     = 300
+  target      = element(linode_instance.nodes[*].ip_address, 0)
 }
 
 output "node_public_ip_addresses" {

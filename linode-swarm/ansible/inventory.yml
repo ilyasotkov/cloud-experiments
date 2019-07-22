@@ -19,7 +19,6 @@ all:
       wireguard_address: 10.8.0.103/24
 nodes:
   vars:
-    node_hosting_provider: linode
     # Change the below after running `ansible-playbook provision.yml` for the first time
     ansible_user: root
     # ansible_user: deploy

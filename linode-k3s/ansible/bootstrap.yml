@@ -1,0 +1,5 @@
+- name: Bootstrap the local repository prior to provisioning cloud infrastructure
+  hosts: localhost
+  gather_facts: no
+  roles:
+    - bootstrap

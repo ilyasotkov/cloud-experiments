@@ -1,0 +1,5 @@
+- name: Install apps
+  hosts: master1
+  tasks:
+    - debug:
+        msg: k3s

@@ -1,0 +1,6 @@
+- name: githubixx-ansible-role-harden-linux
+  src: https://github.com/githubixx/ansible-role-harden-linux
+  version: v4.0.2
+- name: githubixx-ansible-role-wireguard
+  src: https://github.com/githubixx/ansible-role-wireguard
+  version: 3.2.0

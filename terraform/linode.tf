@@ -3,7 +3,7 @@ variable "hostname_format" {
 }
 
 variable "node_count" {
-  default = 2
+  default = 3
 }
 
 variable "app_domain_names" {
@@ -26,7 +26,7 @@ resource "linode_instance" "nodes" {
   label             = format(var.hostname_format, count.index + 1)
   type              = "g6-nanode-1"
   region            = "eu-west"
-  private_ip        = true
+  private_ip        = false
   boot_config_label = local.linode_boot_config_label
 
   disk {
@@ -89,9 +89,9 @@ output "node_public_ip_addresses" {
   value = linode_instance.nodes[*].ip_address
 }
 
-output "node_private_ip_addresses" {
-  value = linode_instance.nodes[*].private_ip_address
-}
+# output "node_private_ip_addresses" {
+#   value = linode_instance.nodes[*].private_ip_address
+# }
 
 output "node_domain_names" {
   value = linode_domain_record.node_hostnames[*].name

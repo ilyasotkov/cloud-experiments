@@ -13,6 +13,10 @@ all:
       ansible_host: linode-swarm-node-2.flexp.xyz
       wireguard_endpoint: linode-swarm-node-2.flexp.xyz
       wireguard_address: 10.8.0.102/24
+    worker2:
+      ansible_host: linode-swarm-node-3.flexp.xyz
+      wireguard_endpoint: linode-swarm-node-3.flexp.xyz
+      wireguard_address: 10.8.0.103/24
 nodes:
   vars:
     node_hosting_provider: linode
@@ -33,11 +37,14 @@ nodes:
         docker_swarm_role: worker
       hosts:
         worker1: {}
+        worker2: {}
 vpn:
   hosts:
     master1: {}
     worker1: {}
+    worker2: {}
 harden_linux:
   hosts:
     master1: {}
     worker1: {}
+    worker2: {}

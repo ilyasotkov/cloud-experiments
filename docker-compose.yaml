@@ -4,10 +4,6 @@ services:
   controller:
     build: .
     working_dir: /linode-swarm
-    # Below is a simple hack to "speed up" DNS propagation after domain names are created with Terraform
-    extra_hosts:
-    - linode-swarm-node-1.flexp.xyz:178.79.147.87
-    - linode-swarm-node-2.flexp.xyz:178.79.136.218
     volumes:
     - .:/linode-swarm
     - ./terraform/.terraformrc:/root/.terraformrc

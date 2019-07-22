@@ -40,6 +40,7 @@
 - name: Install Docker and create a Docker Swarm cluster
   hosts: nodes
   roles:
-    - swarm
+    - role: swarm
+      when: ansible_user != "root"
   tags:
     - swarm

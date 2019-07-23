@@ -6,13 +6,6 @@
   tags:
     - linux
 
-- hosts: nodes
-  tasks:
-    - debug:
-        var: leader_manager_advertise_addr
-  tags:
-    - debug
-
 - name: Run miscellaneous tasks for Linux
   hosts: nodes
   tasks:

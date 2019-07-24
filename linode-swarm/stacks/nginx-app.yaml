@@ -8,7 +8,6 @@ networks:
 services:
   nginx:
     image: nginx:latest
-    restart: always
     networks:
       - traefik
       - internal

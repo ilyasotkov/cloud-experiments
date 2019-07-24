@@ -25,11 +25,6 @@ services:
         traefik.port: "8888"
         traefik.frontend.rule: Host:api.flexp.xyz
         traefik.protocol: http
-      restart_policy:
-        condition: any
-        delay: 5s
-        max_attempts: 10
-        window: 120s
     networks:
     - internal
     - traefik

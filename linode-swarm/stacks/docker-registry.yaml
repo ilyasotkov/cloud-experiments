@@ -19,7 +19,6 @@ volumes:
 services:
   proxy:
     image: nginx:1.17.1
-    restart: always
     networks:
       - traefik
       - internal
@@ -51,5 +50,3 @@ services:
         target: /etc/docker/registry/config.yml
     deploy:
       replicas: 1
-      restart_policy:
-        condition: on-failure

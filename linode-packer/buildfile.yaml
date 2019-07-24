@@ -1,0 +1,22 @@
+variables:
+  linode_token: "{{ env `LINODE_TOKEN` }}"
+  greeting: "default"
+
+builders:
+- type: linode
+  linode_token: "{{ user `linode_token` }}"
+  region: eu-central
+  swap_size: 256
+  image: linode/alpine3.9
+  instance_type: g6-nanode-1
+  instance_label: packer-alpine-{{ timestamp }}
+  image_label: packer-alpine-poc
+  image_description: packer-alpine-poc
+  ssh_username: root
+
+provisioners:
+- type: ansible
+  playbook_file: ./playbook.yaml
+  extra_arguments:
+  - --extra-vars
+  - greeting={{ user `greeting` }}

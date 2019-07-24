@@ -1,0 +1,18 @@
+- name: Install python
+  hosts: all
+  gather_facts: no
+  tasks:
+    - name: Install python
+      raw: apk add python --no-cache
+
+- name: Test Packer Ansible provisioner
+  hosts: all
+  gather_facts: yes
+  tasks:
+    - name: Debug
+      debug:
+        msg: Hello, {{ greeting }}!
+    - name: Create test file
+      copy:
+        dest: /hello.txt
+        content: Hello, {{ greeting }}!

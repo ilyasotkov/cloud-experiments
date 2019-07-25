@@ -1,0 +1,16 @@
+apiVersion: helm.cattle.io/v1
+kind: HelmChart
+metadata:
+  name: {{ metallb_release_name }}
+  namespace: kube-system
+spec:
+  chart: stable/metallb
+  version: 0.9.7
+  targetNamespace: kube-system
+  valuesContent: |-
+    configInline:
+      address-pools:
+      - name: default
+        protocol: layer2
+        addresses:
+        - "{{ metallb_ip_address }}/32"

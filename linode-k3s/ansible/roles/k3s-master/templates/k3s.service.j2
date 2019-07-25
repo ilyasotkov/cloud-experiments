@@ -5,7 +5,7 @@ After=network-online.target
 [Service]
 ExecStartPre=-/sbin/modprobe br_netfilter
 ExecStartPre=-/sbin/modprobe overlay
-ExecStart=/usr/local/bin/k3s server --advertise-address {{ master_ip }}
+ExecStart=/usr/local/bin/k3s server --advertise-address {{ master_ip }} --node-ip {{ ansible_wg0.ipv4.address }} --flannel-iface wg0 --no-deploy traefik
 KillMode=process
 Delegate=yes
 LimitNOFILE=infinity

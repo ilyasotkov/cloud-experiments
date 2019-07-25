@@ -6,13 +6,6 @@
   tags:
     - linux
 
-- hosts: k3s_cluster
-  tasks:
-    - debug:
-        var: leader_manager_advertise_addr
-  tags:
-    - debug
-
 - name: Run miscellaneous tasks for Linux
   hosts: k3s_cluster
   tasks:
@@ -33,7 +26,6 @@
   hosts: vpn
   roles:
     - role: githubixx-ansible-role-wireguard
-      when: ansible_user != "root"
   tags:
     - wg
 
@@ -41,7 +33,6 @@
   hosts: master
   roles:
     - role: k3s-master
-      when: ansible_user != "root"
   tags:
     - k3s
 
@@ -49,6 +40,5 @@
   hosts: node
   roles:
     - role: k3s-node
-      when: ansible_user != "root"
   tags:
     - k3s

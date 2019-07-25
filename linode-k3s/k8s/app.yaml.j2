@@ -1,0 +1,24 @@
+apiVersion: helm.cattle.io/v1
+kind: HelmChart
+metadata:
+  name: forms-app
+  namespace: kube-system
+spec:
+  repo: https://exekube.github.io/charts
+  chart: nginx-react
+  version: 0.2.1
+  targetNamespace: default
+  valuesContent: |-
+    replicaCount: 2
+    image:
+      repository: ilyasotkov/forms-app
+      tag: 0.3.2
+      pullPolicy: IfNotPresent
+    serviceType: ClusterIP
+    servicePort: 80
+    ingress:
+      enabled: true
+      annotations:
+        kubernetes.io/ingress.class: nginx
+      hosts:
+        - a.k3s.flexp.xyz

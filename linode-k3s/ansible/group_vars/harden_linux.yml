@@ -26,7 +26,7 @@ harden_linux_ufw_rules:
     protocol: tcp
   - rule: allow
     to_port: "51820"
-    protocol: "udp"
+    protocol: udp
 
 harden_linux_ufw_allow_networks:
   - 10.0.0.0/8

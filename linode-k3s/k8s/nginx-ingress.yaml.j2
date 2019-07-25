@@ -1,0 +1,28 @@
+apiVersion: helm.cattle.io/v1
+kind: HelmChart
+metadata:
+  name: nginx-ingress
+  namespace: kube-system
+spec:
+  chart: stable/nginx-ingress
+  version: 1.6.18
+  targetNamespace: kube-system
+  valuesContent: |-
+    rbac:
+      create: true
+    controller:
+      stats:
+        enabled: true
+      metrics:
+        enabled: true
+      config:
+        server-tokens: "false"
+      resources:
+        requests:
+          cpu: 64m
+          memory: 128Mi
+        limits:
+          cpu: 100m
+          memory: 256Mi
+      publishService:
+        enabled: true

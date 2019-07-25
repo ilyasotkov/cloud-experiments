@@ -8,7 +8,7 @@ variable "node_count" {
 
 variable "app_domain_names" {
   type    = list
-  default = ["k3s"]
+  default = ["app", "api", "a", "b", "c", "d"]
 }
 
 locals {
@@ -25,7 +25,7 @@ resource "linode_instance" "nodes" {
 
   label             = format(var.hostname_format, count.index + 1)
   type              = "g6-nanode-1"
-  region            = "eu-west"
+  region            = "eu-central"
   private_ip        = false
   boot_config_label = local.linode_boot_config_label
 
@@ -79,7 +79,7 @@ resource "linode_domain_record" "apps" {
   count = length(var.app_domain_names)
 
   domain_id   = linode_domain.flexp_xyz.id
-  name        = element(var.app_domain_names, count.index)
+  name        = "${element(var.app_domain_names, count.index)}.k3s"
   record_type = "A"
   ttl_sec     = 300
   target      = element(linode_instance.nodes[*].ip_address, 0)
@@ -88,10 +88,6 @@ resource "linode_domain_record" "apps" {
 output "node_public_ip_addresses" {
   value = linode_instance.nodes[*].ip_address
 }
-
-# output "node_private_ip_addresses" {
-#   value = linode_instance.nodes[*].private_ip_address
-# }
 
 output "node_domain_names" {
   value = linode_domain_record.node_hostnames[*].name

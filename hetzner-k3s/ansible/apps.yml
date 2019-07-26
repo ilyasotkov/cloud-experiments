@@ -1,0 +1,61 @@
+- name: Install apps
+  hosts: master1
+  tasks:
+  - name: Ensure all docker dependencies are present
+    apt:
+      state: present
+      force: yes
+      name:
+        - apt-transport-https
+        - ca-certificates
+        - curl
+        - gnupg-agent
+        - software-properties-common
+        - python-pkg-resources
+        - python-pip
+
+  - name: Install pip packages required for docker_stack Ansible module
+    pip:
+      state: present
+      name:
+        - setuptools
+        - jsondiff
+        - pyyaml
+        - openshift
+        - kubernetes-validate
+
+  - name: Deploy metallb
+    k8s:
+      state: present
+      kubeconfig: /home/deploy/.kube/config
+      definition: "{{ lookup('template', '../k8s/metallb.yaml.j2') }}"
+      validate:
+        fail_on_error: no
+        strict: yes
+    vars:
+      metallb_release_name: metallb
+      metallb_ip_address: "{{ hostvars.master1.ansible_eth0.ipv4.address }}"
+    tags:
+    - metallb
+
+  - name: Deploy nginx-ingress
+    k8s:
+      state: present
+      kubeconfig: /home/deploy/.kube/config
+      definition: "{{ lookup('template', '../k8s/nginx-ingress.yaml.j2') }}"
+      validate:
+        fail_on_error: no
+        strict: yes
+    tags:
+      - ingress
+
+  - name: Deploy forms-app
+    k8s:
+      state: present
+      kubeconfig: /home/deploy/.kube/config
+      definition: "{{ lookup('template', '../k8s/app.yaml.j2') }}"
+      validate:
+        fail_on_error: no
+        strict: yes
+    tags:
+      - app

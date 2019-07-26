@@ -1,0 +1,47 @@
+ungrouped:
+  hosts:
+    localhost:
+      ansible_connection: local
+      controller_ssh_key_comment: hcloud-k3s
+all:
+  vars:
+    ansible_user: admin
+    ansible_become: yes
+    ansible_ssh_private_key_file: /project/.ssh/id_rsa
+    ansible_python_interpreter: /usr/bin/python
+    python_version: 2
+    local_path: /project
+  hosts:
+    master1:
+      ansible_host: k3s-node-1.flexp.live
+    # worker1:
+    #   ansible_host: k3s-node-2.flexp.live
+    #   wireguard_endpoint: k3s-node-2.flexp.live
+    #   wireguard_address: 10.8.0.102/24
+    # worker2:
+    #   ansible_host: k3s-node-3.flexp.live
+    #   wireguard_endpoint: k3s-node-3.flexp.live
+    #   wireguard_address: 10.8.0.103/24
+vpn:
+  hosts:
+    master1: {}
+    # worker1: {}
+    # worker2: {}
+harden_linux:
+  hosts:
+    master1: {}
+    # worker1: {}
+    # worker2: {}
+k3s_cluster:
+  vars:
+    k3s_version: v0.7.0
+    systemd_dir: /etc/systemd/system
+    master_ip: "{{ hostvars.master1.ansible_ens10.ipv4.address }}"
+  children:
+    master:
+      hosts:
+        master1: {}
+    # node:
+    #   hosts:
+    #     worker1: {}
+    #     worker2: {}

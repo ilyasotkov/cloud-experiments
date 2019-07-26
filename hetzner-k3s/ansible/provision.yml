@@ -1,0 +1,41 @@
+- hosts: harden_linux:vpn:k3s_cluster
+  gather_facts: no
+  tasks:
+    # - name: Wait for 60 seconds
+    #   raw: sleep 60
+    - name: install python 2
+      raw: test -e /usr/bin/python || (apt -y update && apt install -y python-minimal python-setuptools)
+  tags:
+    - linux
+
+- name: Run miscellaneous tasks for Linux
+  hosts: harden_linux
+  tasks:
+  - name: Set hostname
+    hostname:
+      name: "{{ ansible_host.split('.')[0] }}"
+  tags:
+    - hostname
+
+- name: Harden Linux installation for improved security
+  hosts: harden_linux
+  roles:
+    - harden-linux
+  tags:
+    - linux
+
+- name: Install k3s on master node
+  hosts: master
+  roles:
+    - role: k3s-master
+  tags:
+    - k3s
+    - k3s-master
+
+- name: Install k3s on worker nodes
+  hosts: node
+  roles:
+    - role: k3s-node
+  tags:
+    - k3s
+    - k3s-node

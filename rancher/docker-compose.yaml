@@ -1,0 +1,18 @@
+version: "3.7"
+
+services:
+  controller:
+    build: .
+    volumes:
+    - .:/project
+    - ./.terraformrc:/root/.terraformrc
+  rancher-server:
+    image: rancher/rancher:v2.2.6
+    ports:
+    - 80:80
+    - 443:443
+    volumes:
+    - ./certs:/container/certs
+    - ./rancher-data:/var/lib/rancher
+    environment:
+      SSL_CERT_DIR: /container/certs

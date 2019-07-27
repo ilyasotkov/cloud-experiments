@@ -1,0 +1,5 @@
+.terraform/
+.terraformrc
+certs/
+secrets/
+rancher-data/

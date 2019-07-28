@@ -1,0 +1,42 @@
+version: "2"
+
+vars:
+  plan_opt: ""
+
+tasks:
+
+  apply:
+    deps: [init]
+    dir: ./terraform
+    cmds:
+      - terraform apply -auto-approve
+
+  cluster:
+    deps: [apply]
+    dir: ./ansible
+    cmds:
+      # - sleep 30
+      - ./inventory.py > /tmp/inventory.json
+      - ansible-playbook provision.yml
+
+  plan:
+    deps: [init]
+    dir: ./terraform
+    cmds:
+      - terraform plan {{.plan_opt}}
+
+  destroy:
+    deps: [init]
+    dir: ./terraform
+    cmds:
+      - terraform destroy
+
+  init:
+    dir: ./terraform
+    cmds:
+      - terraform init
+    sources:
+      - main.tf
+    generates:
+      - .terraform/plugins/linux_amd64/lock.json
+    method: checksum

@@ -3,7 +3,7 @@ terraform {
     organization = "ilyasotkov"
 
     workspaces {
-      name = "hcloud"
+      prefix = "hcloud-"
     }
   }
 }

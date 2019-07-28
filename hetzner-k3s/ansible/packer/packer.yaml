@@ -17,8 +17,8 @@ provisioners:
   - --skip-tags
   - packer-ignore
   - --extra-vars
-  - local_path=/project ansible_python_interpreter=/usr/bin/python python_version=2
+  - ansible_python_interpreter=/usr/bin/python python_version=2
   groups:
   - all
   - harden_linux
-  - node
+  - nodes

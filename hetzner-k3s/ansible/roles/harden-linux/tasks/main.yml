@@ -59,7 +59,7 @@
     regexp: "{{ item }}"
     line: "{{ harden_linux_ntp_settings[item] }}"
     state: "present"
-  notify: "restart ntpd"
+  notify: "Restart ntpd"
   when: harden_linux_ntp is defined
   with_items:
     - "{{ harden_linux_ntp_settings | list }}"
@@ -88,7 +88,7 @@
     regexp: "{{ item }}"
     line: "{{ harden_linux_sshd_settings[item] }}"
     state: "present"
-  notify: "restart ssh"
+  notify: "Restart ssh"
   with_items:
     - "{{ harden_linux_sshd_settings | list }}"
   tags:
@@ -122,7 +122,7 @@
     regexp: "{{ item }}"
     line: "{{ harden_linux_ufw_defaults[item] }}"
     state: present
-  notify: "reload ufw"
+  notify: "Reload ufw"
   with_items:
     - "{{ harden_linux_ufw_defaults | list }}"
   tags:

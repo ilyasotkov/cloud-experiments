@@ -1,5 +1,7 @@
 FROM alpine:3.10
 
+WORKDIR /project
+
 ARG ANSIBLE_VERSION=2.8.1
 RUN apk --update add \
                 sudo \
@@ -32,9 +34,6 @@ RUN apk --update add \
         && mkdir -p /etc/ansible \
         && echo localhost > /etc/ansible/hosts
 
-WORKDIR /project
-ARG ANSIBLE_VAULT_PASSWORD
-
 ARG TERRAFORM_VERSION=0.12.5
 RUN curl -o ./terraform.zip \
         https://releases.hashicorp.com/terraform/${TERRAFORM_VERSION}/terraform_${TERRAFORM_VERSION}_linux_amd64.zip \
@@ -57,12 +56,20 @@ RUN curl -L -o packer.zip \
         && rm -f packer.zip \
         && packer version
 
-ENV HETZNER_CLI_VERSION 1.13.0
+ARG HETZNER_CLI_VERSION=1.13.0
 RUN curl -L -o hcloud.tar.gz \
         https://github.com/hetznercloud/cli/releases/download/v${HETZNER_CLI_VERSION}/hcloud-linux-amd64-v${HETZNER_CLI_VERSION}.tar.gz \
         && tar -xvzf hcloud.tar.gz \
         && rm -rf hcloud.tar.gz \
         && mv hcloud-linux-amd64-v${HETZNER_CLI_VERSION}/bin/hcloud /usr/bin \
         && chmod 0700 /usr/bin/hcloud
+
+ARG TASKFILE_VERSION=2.6.0
+RUN curl -L -o task.tar.gz \
+        https://github.com/go-task/task/releases/download/v${TASKFILE_VERSION}/task_linux_amd64.tar.gz \
+        && tar -xvzf task.tar.gz \
+        && rm -rf task.tar.gz \
+        && mv task /usr/bin \
+        && chmod 0700 /usr/bin/task
 
 COPY . .

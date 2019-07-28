@@ -1,8 +1,6 @@
-- hosts: harden_linux:vpn:k3s_cluster
+- hosts: harden_linux:k3s_cluster
   gather_facts: no
   tasks:
-    # - name: Wait for 60 seconds
-    #   raw: sleep 60
     - name: install python 2
       raw: test -e /usr/bin/python || (apt -y update && apt install -y python-minimal python-setuptools)
   tags:
@@ -25,7 +23,7 @@
     - linux
 
 - name: Install k3s on master node
-  hosts: master
+  hosts: masters
   roles:
     - role: k3s-master
   tags:
@@ -33,7 +31,7 @@
     - k3s-master
 
 - name: Install k3s on worker nodes
-  hosts: node
+  hosts: nodes
   roles:
     - role: k3s-node
   tags:

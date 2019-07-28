@@ -1,15 +1,13 @@
----
-
-- name: reload ufw
+- name: Reload ufw
   ufw:
     state: reloaded
 
-- name: restart ssh
+- name: Restart ssh
   service:
     name: ssh
     state: restarted
 
-- name: restart ntpd
+- name: Restart ntpd
   service:
     name: "{{ harden_linux_ntp }}"
     state: restarted

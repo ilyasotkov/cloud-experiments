@@ -65,7 +65,4 @@ RUN curl -L -o hcloud.tar.gz \
         && mv hcloud-linux-amd64-v${HETZNER_CLI_VERSION}/bin/hcloud /usr/bin \
         && chmod 0700 /usr/bin/hcloud
 
-
-COPY ansible/requirements.yml ./ansible/
-RUN ansible-galaxy install -r ./ansible/requirements.yml
 COPY . .

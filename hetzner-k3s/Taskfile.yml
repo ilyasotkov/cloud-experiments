@@ -5,10 +5,11 @@ tasks:
   cluster:
     deps: [tfapply]
     dir: ./ansible
+    vars:
+      ansible_inventory_path: /tmp/inventory.json
     cmds:
-      - sleep 45
-      - ./inventory.py > /tmp/inventory.json
-      - ansible-playbook provision.yml --inventory /tmp/inventory.json
+      - ./inventory.py > {{ .ansible_inventory_path }}
+      - ansible-playbook provision.yml --inventory {{ .ansible_inventory_path }}
 
   tfapply:
     deps: [tfinit]

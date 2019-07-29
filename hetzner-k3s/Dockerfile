@@ -5,8 +5,7 @@ WORKDIR /project
 ARG ANSIBLE_VERSION=2.8.1
 RUN apk --update add \
                 sudo \
-                python \
-                py-pip \
+                python3 \
                 openssl \
                 ca-certificates \
                 sshpass \
@@ -18,17 +17,17 @@ RUN apk --update add \
                 curl \
                 jq \
         && apk --update add --virtual build-dependencies \
-                python-dev \
+                python3-dev \
                 libffi-dev \
                 openssl-dev \
                 build-base \
-        && pip install --quiet --upgrade \
+        && pip3 install --quiet --upgrade \
                 pip \
                 cffi \
                 pywinrm \
                 jmespath \
                 yq \
-        && pip install --quiet ansible==${ANSIBLE_VERSION} \
+        && pip3 install --quiet ansible==${ANSIBLE_VERSION} \
         && apk del build-dependencies \
         && rm -rf /var/cache/apk/* \
         && mkdir -p /etc/ansible \

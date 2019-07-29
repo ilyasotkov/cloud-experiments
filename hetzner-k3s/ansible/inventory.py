@@ -1,7 +1,7 @@
-#!/usr/bin/env python
+#!/usr/bin/env python3
 
-from __future__ import print_function
-import yaml, json
+import json
+import yaml
 import os
 
 terraform_path = os.path.join(os.path.dirname(__file__), "../terraform")
@@ -31,8 +31,8 @@ inventory = {
     "vars": {
       "ansible_ssh_private_key_file": "/project/.ssh/id_rsa",
       "ansible_become": True,
-      "ansible_python_interpreter": "/usr/bin/python",
-      "python_version": 2,
+      "ansible_python_interpreter": "/usr/bin/python3",
+      "python_version": 3,
       "ansible_user": "admin"
     }
   },
@@ -62,7 +62,7 @@ for index, node_id in enumerate(node_ids):
         inventory["harden_linux"]["hosts"][inventory_hostname] = {}
         inventory["k3s_cluster"]["children"]["masters"]["hosts"][inventory_hostname] = {}
     else:
-        inventory_hostname = "node{}".format(index)
+        inventory_hostname = f"node{index}"
         inventory["all"]["hosts"][inventory_hostname] = {
             "ansible_host": node_id
         }

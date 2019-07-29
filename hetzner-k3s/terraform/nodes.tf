@@ -1,5 +1,5 @@
 variable "node_count" {
-  default = 2
+  default = 2 
 }
 
 resource "hcloud_server" "nodes" {

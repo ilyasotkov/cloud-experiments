@@ -4,7 +4,7 @@ variable "app_domain_names" {
 }
 
 variable "domain_zone" {
-  default = "flexp.live"
+  type = string
 }
 
 # resource "cloudflare_zone" "flexp_live" {

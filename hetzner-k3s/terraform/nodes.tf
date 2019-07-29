@@ -1,5 +1,6 @@
 variable "node_count" {
-  default = 2 
+  type    = number
+  default = 3
 }
 
 resource "hcloud_server" "nodes" {
@@ -9,6 +10,7 @@ resource "hcloud_server" "nodes" {
   image       = "ubuntu-18.04"
   location    = "hel1"
   server_type = "cx11"
+  ssh_keys    = [hcloud_ssh_key.default.id]
 
   user_data = <<USERDATA
 #cloud-config
@@ -19,6 +21,11 @@ users:
   ssh_authorized_keys:
   - ${file("${path.cwd}/../ssh_pubkeys/id_rsa.pub")}
 USERDATA
+}
+
+resource "hcloud_ssh_key" "default" {
+  name = "default"
+  public_key = "${file("${path.cwd}/../ssh_pubkeys/id_rsa.pub")}"
 }
 
 resource "hcloud_server_network" "server_network" {

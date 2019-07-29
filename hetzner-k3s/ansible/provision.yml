@@ -3,7 +3,7 @@
   tasks:
     - name: Wait for node to become available via SSH
       wait_for_connection:
-        timeout: 300
+        timeout: 60
     - name: Wait for automatic system updates
       raw: systemd-run --property="After=apt-daily.service apt-daily-upgrade.service" --wait /bin/true
   tags:

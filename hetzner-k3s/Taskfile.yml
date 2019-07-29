@@ -1,37 +1,40 @@
-version: "2"
-
-vars:
-  plan_opt: ""
+version: "2.6"
 
 tasks:
 
-  apply:
-    deps: [init]
+  cluster:
+    deps: [tfapply]
+    dir: ./ansible
+    cmds:
+      - sleep 45
+      - ./inventory.py > /tmp/inventory.json
+      - ansible-playbook provision.yml --inventory /tmp/inventory.json
+
+  tfapply:
+    deps: [tfinit]
     dir: ./terraform
     cmds:
       - terraform apply -auto-approve
 
-  cluster:
-    deps: [apply]
-    dir: ./ansible
-    cmds:
-      # - sleep 30
-      - ./inventory.py > /tmp/inventory.json
-      - ansible-playbook provision.yml
-
-  plan:
-    deps: [init]
+  tfplan:
+    deps: [tfinit]
     dir: ./terraform
     cmds:
-      - terraform plan {{.plan_opt}}
+      - terraform plan
 
-  destroy:
-    deps: [init]
+  tfplandestroy:
+    deps: [tfinit]
+    dir: ./terraform
+    cmds:
+      - terraform plan -destroy
+
+  tfdestroy:
+    deps: [tfinit]
     dir: ./terraform
     cmds:
       - terraform destroy
 
-  init:
+  tfinit:
     dir: ./terraform
     cmds:
       - terraform init

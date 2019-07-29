@@ -12,7 +12,7 @@ resource "hcloud_server" "nodes" {
 
   user_data = <<USERDATA
 #cloud-config
-hostname: ${format(count.index == 0 ? "k3s-master" : format("k3s-node-%d", count.index))}
+fqdn: ${format(count.index == 0 ? "k3s-master" : format("k3s-node-%d", count.index))}.${var.domain_zone}
 users:
 - name: admin
   sudo: ALL=(ALL) NOPASSWD:ALL

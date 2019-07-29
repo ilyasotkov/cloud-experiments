@@ -3,6 +3,8 @@ variable "app_domain_names" {
   default = ["app"]
 }
 
+variable "domain_zone" {}
+
 # resource "cloudflare_zone" "flexp_live" {
 #   zone   = "flexp.live"
 #   plan   = "free"
@@ -13,7 +15,7 @@ variable "app_domain_names" {
 resource "cloudflare_record" "node_hostnames" {
   count = var.node_count
 
-  domain = "flexp.live"
+  domain = var.domain_zone
   name   = element(hcloud_server.nodes[*].name, count.index)
   value  = element(hcloud_server.nodes[*].ipv4_address, count.index)
   type   = "A"
@@ -23,7 +25,7 @@ resource "cloudflare_record" "node_hostnames" {
 resource "cloudflare_record" "apps" {
   count = length(var.app_domain_names)
 
-  domain = "flexp.live"
+  domain = var.domain_zone
   name   = "${element(var.app_domain_names, count.index)}.k3s"
   value  = element(hcloud_server.nodes[*].ipv4_address, 0)
   type   = "A"

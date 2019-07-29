@@ -5,13 +5,13 @@ import yaml, json
 import os
 
 terraform_path = os.path.join(os.path.dirname(__file__), "../terraform")
-current_directory = os.getcwd()
+project_directory = os.getcwd()
 os.chdir(terraform_path)
 terraform_output_json = os.popen('terraform output -json').read()
-os.chdir(current_directory)
+os.chdir(project_directory)
 
 terraform_output = json.loads(terraform_output_json)
-node_domain_names = terraform_output["node_domain_names"]["value"]
+node_ids = terraform_output["node_ip_addresses"]["value"]
 
 inventory = {
   "ungrouped": {
@@ -53,18 +53,18 @@ inventory = {
   }
 }
 
-for index, node_domain_name in enumerate(node_domain_names):
+for index, node_id in enumerate(node_ids):
     if index == 0:
         inventory_hostname = "master"
         inventory["all"]["hosts"][inventory_hostname] = {
-            "ansible_host": node_domain_name
+            "ansible_host": node_id
         }
         inventory["harden_linux"]["hosts"][inventory_hostname] = {}
         inventory["k3s_cluster"]["children"]["masters"]["hosts"][inventory_hostname] = {}
     else:
         inventory_hostname = "node{}".format(index)
         inventory["all"]["hosts"][inventory_hostname] = {
-            "ansible_host": node_domain_name
+            "ansible_host": node_id
         }
         inventory["harden_linux"]["hosts"][inventory_hostname] = {}
         inventory["k3s_cluster"]["children"]["nodes"]["hosts"][inventory_hostname] = {}

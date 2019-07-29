@@ -6,15 +6,6 @@
   tags:
     - linux
 
-- name: Run miscellaneous tasks for Linux
-  hosts: harden_linux
-  tasks:
-  - name: Set hostname
-    hostname:
-      name: "{{ ansible_host.split('.')[0] }}"
-  tags:
-    - hostname
-
 - name: Harden Linux installation for improved security
   hosts: harden_linux
   roles:

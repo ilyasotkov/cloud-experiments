@@ -6,7 +6,7 @@ variable "node_count" {
 resource "hcloud_server" "nodes" {
   count = var.node_count
 
-  name        = count.index == 0 ? "k3s-master" : format("k3s-node-%d", count.index)
+  name        = count.index == 0 ? "master" : format("node-%d", count.index)
   image       = "ubuntu-18.04"
   location    = "hel1"
   server_type = "cx11"
@@ -14,7 +14,7 @@ resource "hcloud_server" "nodes" {
 
   user_data = <<USERDATA
 #cloud-config
-fqdn: ${format(count.index == 0 ? "k3s-master" : format("k3s-node-%d", count.index))}.${var.domain_zone}
+fqdn: ${format(count.index == 0 ? "master" : format("node-%d", count.index))}.${var.domain_zone}
 users:
 - name: admin
   sudo: ALL=(ALL) NOPASSWD:ALL

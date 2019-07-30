@@ -32,12 +32,13 @@ cleanup() {
 terraform_init() {
     set +x
     temp_file=/tmp/terraform-init-output
-    if echo '1' | TF_WORKSPACE=$1 terraform init -no-color &> $temp_file; then
+    if echo '1' | TF_WORKSPACE=$1 terraform init -no-color -input=false &> $temp_file; then
         terraform workspace select $1
     else
         if cat $temp_file | grep -q 'Error: No existing workspaces.'; then
             terraform workspace new $1
-            terraform init
+            terraform init -input=false
+            rm -f $temp_file
         else
             cat $temp_file
             exit 1

@@ -1,4 +1,8 @@
-variable "app_domain_names" {
+variable "env" {
+  type = string
+}
+
+variable "application_domain_names" {
   type    = list
   default = ["app"]
 }
@@ -7,28 +11,25 @@ variable "domain_zone" {
   type = string
 }
 
-# resource "cloudflare_zone" "flexp_live" {
-#   zone   = "flexp.live"
-#   plan   = "free"
-#   type   = "full"
-#   paused = "false"
-# }
+locals {
+  domain_suffix = var.env == "prod" ? "k3s" : ".k3s-${var.env}"
+}
 
 resource "cloudflare_record" "node_hostnames" {
   count = var.node_count
 
   domain = var.domain_zone
-  name   = element(hcloud_server.nodes[*].name, count.index)
+  name   = "${element(hcloud_server.nodes[*].name, count.index)}${local.domain_suffix}"
   value  = element(hcloud_server.nodes[*].ipv4_address, count.index)
   type   = "A"
   ttl    = 1
 }
 
-resource "cloudflare_record" "apps" {
-  count = length(var.app_domain_names)
+resource "cloudflare_record" "application" {
+  count = length(var.application_domain_names)
 
   domain = var.domain_zone
-  name   = "${element(var.app_domain_names, count.index)}.k3s"
+  name   = "${element(var.application_domain_names, count.index)}"
   value  = element(hcloud_server.nodes[*].ipv4_address, 0)
   type   = "A"
   ttl    = 1

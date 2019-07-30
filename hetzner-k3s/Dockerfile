@@ -71,4 +71,12 @@ RUN curl -L -o task.tar.gz \
         && mv task /usr/bin \
         && chmod 0700 /usr/bin/task
 
+COPY terraform/plugins.tf /terraform-plugins/plugins.tf
+RUN cd /terraform-plugins \
+        && terraform init \
+        && mkdir -p /root/.terraform.d/plugins \
+        && cp /terraform-plugins/.terraform/plugins/linux_amd64/terraform-provider* /root/.terraform.d/plugins/ \
+        && cd \
+        && rm -rf /terraform-plugins
+
 COPY . .

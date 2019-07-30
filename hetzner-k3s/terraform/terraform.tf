@@ -1,6 +1,6 @@
 terraform {
   backend "remote" {
-    organization = "ilyasotkov"
+    organization = "flexp"
 
     workspaces {
       prefix = "hcloud-"

@@ -46,15 +46,6 @@ RUN curl -L -o ./k3s \
         && chmod +x ./k3s \
         && mv k3s /usr/bin
 
-ARG PACKER_VERSION=1.4.2
-RUN curl -L -o packer.zip \
-        https://releases.hashicorp.com/packer/${PACKER_VERSION}/packer_${PACKER_VERSION}_linux_amd64.zip \
-        && unzip packer.zip \
-        && chmod +x packer \
-        && mv packer /usr/bin \
-        && rm -f packer.zip \
-        && packer version
-
 ARG HETZNER_CLI_VERSION=1.13.0
 RUN curl -L -o hcloud.tar.gz \
         https://github.com/hetznercloud/cli/releases/download/v${HETZNER_CLI_VERSION}/hcloud-linux-amd64-v${HETZNER_CLI_VERSION}.tar.gz \
@@ -62,14 +53,6 @@ RUN curl -L -o hcloud.tar.gz \
         && rm -rf hcloud.tar.gz \
         && mv hcloud-linux-amd64-v${HETZNER_CLI_VERSION}/bin/hcloud /usr/bin \
         && chmod 0700 /usr/bin/hcloud
-
-ARG TASKFILE_VERSION=2.6.0
-RUN curl -L -o task.tar.gz \
-        https://github.com/go-task/task/releases/download/v${TASKFILE_VERSION}/task_linux_amd64.tar.gz \
-        && tar -xvzf task.tar.gz \
-        && rm -rf task.tar.gz \
-        && mv task /usr/bin \
-        && chmod 0700 /usr/bin/task
 
 COPY terraform/plugins.tf /terraform-plugins/plugins.tf
 RUN cd /terraform-plugins \

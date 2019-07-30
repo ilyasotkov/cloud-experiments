@@ -29,12 +29,20 @@ resource "cloudflare_record" "application" {
   count = length(var.application_domain_names)
 
   domain = var.domain_zone
-  name   = "${element(var.application_domain_names, count.index)}"
+  name   = element(var.application_domain_names, count.index)
   value  = element(hcloud_server.nodes[*].ipv4_address, 0)
   type   = "A"
   ttl    = 1
 }
 
+output "domain_zone" {
+  value = "${var.domain_zone}"
+}
+
 output "node_domain_names" {
   value = cloudflare_record.node_hostnames[*].hostname
+}
+
+output "env" {
+  value = var.env
 }

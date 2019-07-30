@@ -26,13 +26,20 @@ usage() {
 }
 
 cleanup() {
-    rm -rf /tmp/inventory.json
+    rm -f /tmp/inventory.json
+    rm -f /tmp/tfout.json
+}
+
+ansible_playbook() {
+    ansible_inventory_path=/tmp/inventory.json
+    ./ansible/inventory.py > $ansible_inventory_path
+    ANSIBLE_HOST_KEY_CHECKING=False ansible-playbook ./ansible/$1 --inventory $ansible_inventory_path
 }
 
 terraform_init() {
     set +x
     temp_file=/tmp/terraform-init-output
-    if echo '1' | TF_WORKSPACE=$1 terraform init -no-color -input=false &> $temp_file; then
+    if echo '1' | TF_WORKSPACE=$1 terraform init -input=false -no-color &> $temp_file; then
         terraform workspace select $1
     else
         if cat $temp_file | grep -q 'Error: No existing workspaces.'; then

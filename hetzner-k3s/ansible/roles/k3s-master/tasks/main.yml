@@ -63,12 +63,6 @@
     remote_src: yes
     owner: "{{ ansible_user }}"
 
-- name: Replace https://localhost:6443 by https://master-ip:6443
-  replace:
-    path: /home/{{ ansible_user }}/.kube/config
-    regexp: 'https://localhost:6443'
-    replace: 'https://{{ master_ip }}:6443'
-
 - name: Create kubectl symlink
   file:
     src: /usr/local/bin/k3s
@@ -80,3 +74,27 @@
     src: /usr/local/bin/k3s
     dest: /usr/local/bin/crictl
     state: link
+
+- name: Fetch kubeconfig
+  fetch:
+    src: /home/{{ ansible_user }}/.kube/config
+    dest: "{{ fetch_kubeconfig_path }}"
+    flat: yes
+
+- name: Update kubernetes endpoint in local kubeconfig
+  delegate_to: localhost
+  connection: local
+  replace:
+    path: "{{ fetch_kubeconfig_path }}"
+    regexp: 'https://localhost:6443'
+    replace: "https://{{ hostvars[groups['masters'][0]].ansible_eth0.ipv4.address }}:6443"
+
+- name: Allow communication to Kubernetes master
+  ufw:
+    rule: allow
+    from_ip: "{{ kube_api_allowed_sources }}"
+    to_ip: any
+    from_port: ""
+    to_port: 6443
+    protocol: any
+    log: false

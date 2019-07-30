@@ -1,0 +1,8 @@
+helmfiles:
+- path: ./helmfiles/repositories.yaml
+- path: ./helmfiles/admin.yaml
+  values:
+  - masterIpAddress: {{ .Values.masterIpAddress }}
+- path: ./helmfiles/ingress.yaml
+  values:
+  - applicationDomainZone: {{ .Values.applicationDomainZone }}

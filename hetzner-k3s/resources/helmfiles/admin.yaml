@@ -1,0 +1,16 @@
+releases:
+
+- name: metallb
+  installed: true
+  namespace: kube-system
+  labels:
+    app: metallb
+  chart: stable/metallb
+  version: 0.10.0
+  values:
+  - configInline:
+      address-pools:
+      - name: default
+        protocol: layer2
+        addresses:
+        - "{{ .Values.masterIpAddress }}/32"

@@ -1,0 +1,50 @@
+releases:
+
+- name: nginx-ingress
+  installed: true
+  namespace: kube-system
+  labels:
+    app: nginx-ingress
+  chart: stable/nginx-ingress
+  version: 1.6.18
+  values:
+  - rbac:
+      create: true
+    controller:
+      stats:
+        enabled: true
+      metrics:
+        enabled: true
+      config:
+        server-tokens: "false"
+      resources:
+        requests:
+          cpu: 64m
+          memory: 128Mi
+        limits:
+          cpu: 100m
+          memory: 256Mi
+      publishService:
+        enabled: true
+
+- name: forms-app
+  installed: true
+  namespace: default
+  labels:
+    app: forms-app
+  chart: exekube/nginx-react
+  version: 0.2.1
+  values:
+  - replicaCount: 2
+    image:
+      repository: ilyasotkov/forms-app
+      tag: 0.3.2
+      pullPolicy: IfNotPresent
+    serviceType: ClusterIP
+    servicePort: 80
+    ingress:
+      enabled: true
+      annotations:
+        kubernetes.io/ingress.class: nginx
+      hosts:
+        - app.{{ .Values.applicationDomainZone }}

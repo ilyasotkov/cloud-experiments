@@ -79,4 +79,19 @@ RUN cd /terraform-plugins \
         && cd \
         && rm -rf /terraform-plugins
 
+ARG HELM_VERSION=2.14.2
+RUN curl -L -o helm.tar.gz \
+        https://get.helm.sh/helm-v${HELM_VERSION}-linux-amd64.tar.gz \
+        && tar -xvzf helm.tar.gz \
+        && rm -rf helm.tar.gz \
+        && chmod 0700 linux-amd64/helm \
+        && mv linux-amd64/helm /usr/bin \
+        && helm plugin install https://github.com/databus23/helm-diff --version master
+
+ARG HELMFILE_VERSION=0.80.2
+RUN curl -L -o helmfile \
+        https://github.com/roboll/helmfile/releases/download/v${HELMFILE_VERSION}/helmfile_linux_amd64 \
+        && chmod 0700 helmfile \
+        && mv helmfile /usr/bin
+
 COPY . .

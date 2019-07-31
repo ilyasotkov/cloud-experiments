@@ -4,7 +4,6 @@ set -eux
 cd $(dirname $0)/..
 source ./scripts/includes.sh
 setup $@
-trap cleanup EXIT
 
 cd ./terraform
 terraform output -json > /tmp/tfout.json

@@ -25,11 +25,6 @@ usage() {
     set -x
 }
 
-cleanup() {
-    rm -f /tmp/inventory.json
-    rm -f /tmp/tfout.json
-}
-
 terraform_init() {
     set +x
     temp_file=/tmp/terraform-init-output

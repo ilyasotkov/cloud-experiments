@@ -4,7 +4,6 @@ set -eux
 cd $(dirname $0)/..
 source ./scripts/includes.sh
 setup $@
-trap cleanup EXIT
 export TF_IN_AUTOMATION=1
 
 # Provision infrastructure

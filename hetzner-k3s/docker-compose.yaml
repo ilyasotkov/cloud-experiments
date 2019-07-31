@@ -1,0 +1,18 @@
+version: "3.7"
+
+services:
+  controller:
+    build: .
+    volumes:
+    - .:/project
+    - ./terraform/.terraformrc:/root/.terraformrc
+
+  dashboard:
+    image: bitnami/kubectl:1.14.3
+    environment:
+    - KUBECONFIG=/project/kubeconfigs/$ENV.yaml
+    volumes:
+    - .:/project
+    ports:
+    - 9443:9443
+    command: -n kubernetes-dashboard port-forward svc/kubernetes-dashboard 9443:443 --address=0.0.0.0

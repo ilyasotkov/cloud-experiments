@@ -1,0 +1,30 @@
+- name: Wait for hosts to become available after creation
+  hosts: cluster
+  gather_facts: no
+  tasks:
+    - name: Wait for VMs to become available via SSH
+      wait_for_connection:
+        timeout: 60
+    - name: Wait for automatic system updates to finish
+      raw: systemd-run --property="After=apt-daily.service apt-daily-upgrade.service" --wait /bin/true
+
+- name: Apply security settings to hosts
+  hosts: cluster
+  roles:
+    - role: githubixx-ansible-role-harden-linux
+  tags:
+    - linux
+
+- name: Install k3s on master
+  hosts: masters
+  roles:
+    - role: k3s-master
+  tags:
+    - k3s
+
+- name: Install k3s on workers
+  hosts: workers
+  roles:
+    - role: k3s-worker
+  tags:
+    - k3s

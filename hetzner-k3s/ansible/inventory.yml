@@ -1,0 +1,6 @@
+ungrouped:
+  hosts:
+    localhost:
+      local_path: /project
+      ansible_connection: local
+      controller_ssh_key_comment: hcloud-k3s

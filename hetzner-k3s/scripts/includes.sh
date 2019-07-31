@@ -30,12 +30,6 @@ cleanup() {
     rm -f /tmp/tfout.json
 }
 
-ansible_playbook() {
-    ansible_inventory_path=/tmp/inventory.json
-    ./ansible/inventory.py > $ansible_inventory_path
-    ANSIBLE_HOST_KEY_CHECKING=False ansible-playbook ./ansible/$1 --inventory $ansible_inventory_path
-}
-
 terraform_init() {
     set +x
     temp_file=/tmp/terraform-init-output

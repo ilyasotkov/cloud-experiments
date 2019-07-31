@@ -3,56 +3,73 @@
 import json
 import yaml
 import os
+import subprocess
 
-terraform_path = os.path.join(os.path.dirname(__file__), '../terraform')
-project_directory = os.getcwd()
-os.chdir(terraform_path)
-terraform_output_json = os.popen('terraform output -json').read()
-os.chdir(project_directory)
+def main():
+    terraform_output = capture_terraform_output(terraform_directory='../terraform')
+    ansible_inventory = generate_ansible_inventory(terraform_output)
+    print(json.dumps(ansible_inventory))
 
-terraform_output = json.loads(terraform_output_json)
-node_ids = terraform_output['node_ip_addresses']['value']
-environment_type = terraform_output['env']['value']
 
-inventory = {
-  'harden_linux': {
-    'hosts': {},
-    'vars': {}
-  },
-  'all': {
-    'hosts': {},
-    'vars': {
-        'environment_type': environment_type
-    }
-  },
-  'k3s_cluster': {
-    'children': {
-      'nodes': {
-        'hosts': {},
-        'vars': {}
-      },
-      'masters': {
-        'hosts': {},
-        'vars': {}
-      }
-    }
-  }
-}
+def capture_terraform_output(terraform_directory):
+    """Get Terraform output and load to a Python dict"""
 
-for index, node_id in enumerate(node_ids):
-    if index == 0:
-        inventory_hostname = 'master'
-        inventory['all']['hosts'][inventory_hostname] = {
-            'ansible_host': node_id
+    terraform_output_raw = subprocess.check_output(
+        'terraform output -json',
+        cwd=terraform_directory,
+        shell=True)
+    terraform_output = json.loads(terraform_output_raw)
+    return terraform_output
+
+
+def ansible_inventory_base():
+    return {
+        '_meta': {
+            'hostvars': {}
+        },
+        'all': {
+            'children': ['ungrouped', 'cluster', 'masters', 'workers'],
+            'hosts': [],
+            'vars': {}
+        },
+        'ungrouped': {
+            'children': []
+        },
+        'cluster': {
+            'children': ['masters', 'workers']
+        },
+        'masters': {
+            'hosts': [],
+            'vars': {}
+        },
+        'workers': {
+            'hosts': [],
+            'vars': {}
         }
-        inventory['harden_linux']['hosts'][inventory_hostname] = {}
-        inventory['k3s_cluster']['children']['masters']['hosts'][inventory_hostname] = {}
-    else:
-        inventory_hostname = f'node{index}'
-        inventory['all']['hosts'][inventory_hostname] = {
-            'ansible_host': node_id
-        }
-        inventory['harden_linux']['hosts'][inventory_hostname] = {}
-        inventory['k3s_cluster']['children']['nodes']['hosts'][inventory_hostname] = {}
+    }
 
-print(json.dumps(inventory, indent=2))
+
+def generate_ansible_inventory(terraform_output):
+    ansible_inventory = ansible_inventory_base()
+
+    environment_type = terraform_output['env']['value']
+    node_ip_addresses = terraform_output['node_ip_addresses']['value']
+    node_domain_names = terraform_output['node_domain_names']['value']
+
+    ansible_inventory['all']['vars']['environment_type'] = environment_type
+
+    for index, node_ip_address in enumerate(node_ip_addresses):
+        inventory_hostname = node_domain_names[index]
+        ansible_inventory['_meta']['hostvars'][inventory_hostname] = {
+            'ansible_host': node_ip_address
+        }
+        if inventory_hostname.startswith('master'):
+            ansible_inventory['masters']['hosts'].append(inventory_hostname)
+            ansible_inventory['all']['hosts'].append(inventory_hostname)
+        else:
+            ansible_inventory['workers']['hosts'].append(inventory_hostname)
+            ansible_inventory['all']['hosts'].append(inventory_hostname)
+
+    return ansible_inventory
+
+main()

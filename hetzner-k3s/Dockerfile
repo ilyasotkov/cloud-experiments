@@ -33,6 +33,9 @@ RUN apk --update add \
         && mkdir -p /etc/ansible \
         && echo localhost > /etc/ansible/hosts
 
+COPY ansible/requirements.yml ./ansible/
+RUN ansible-galaxy install -r ./ansible/requirements.yml
+
 ARG TERRAFORM_VERSION=0.12.5
 RUN curl -o ./terraform.zip \
         https://releases.hashicorp.com/terraform/${TERRAFORM_VERSION}/terraform_${TERRAFORM_VERSION}_linux_amd64.zip \
@@ -69,6 +72,7 @@ RUN curl -L -o helm.tar.gz \
         && rm -rf helm.tar.gz \
         && chmod 0700 linux-amd64/helm \
         && mv linux-amd64/helm /usr/bin \
+        && helm init --client-only \
         && helm plugin install https://github.com/databus23/helm-diff --version master
 
 ARG HELMFILE_VERSION=0.80.2

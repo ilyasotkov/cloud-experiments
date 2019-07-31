@@ -11,8 +11,13 @@ variable "domain_zone" {
   type = string
 }
 
+variable "cluster_type" {
+  type    = string
+  default = "k3s"
+}
+
 locals {
-  domain_suffix = var.env == "prod" ? "k3s" : ".k3s-${var.env}"
+  domain_suffix = var.env == "prod" ? var.cluster_type : ".${var.cluster_type}-${var.env}"
 }
 
 resource "cloudflare_record" "node_hostnames" {

@@ -6,7 +6,7 @@ variable "node_count" {
 resource "hcloud_server" "nodes" {
   count = var.node_count
 
-  name        = count.index == 0 ? "master" : format("node-%d", count.index)
+  name        = count.index == 0 ? "master" : format("worker-%d", count.index)
   image       = "ubuntu-18.04"
   location    = "hel1"
   server_type = "cx11"

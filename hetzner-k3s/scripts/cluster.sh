@@ -13,8 +13,8 @@ terraform_init $env
 terraform apply -input=false -auto-approve -var-file ./vars/$env.tfvars
 cd -
 
-# Create a cluster from VMs
-ansible_playbook provision.yml
+# Create a cluster
+cd ./ansible; ansible-playbook main.yml --skip-tags user --inventory inventory.py; cd -
 
 # Deploy applications onto the cluster
 export KUBECONFIG=$(pwd)/kubeconfigs/$1.yaml

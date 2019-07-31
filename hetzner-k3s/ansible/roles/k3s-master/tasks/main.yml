@@ -4,20 +4,20 @@
     dest: /usr/local/bin/k3s
     owner: root
     group: root
-    mode: 755
+    mode: 0700
 
 - name: Copy k3s service file
   register: k3s_service
   template:
-    src: k3s.service.j2
-    dest: "{{ systemd_dir }}/k3s.service"
+    src: k3s-master.service.j2
+    dest: "{{ systemd_dir }}/k3s-master.service"
     owner: root
     group: root
-    mode: 0755
+    mode: 0644
 
 - name: Enable and check k3s service
   systemd:
-    name: k3s
+    name: k3s-master
     daemon_reload: yes
     state: restarted
     enabled: yes

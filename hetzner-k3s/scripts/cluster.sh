@@ -6,14 +6,14 @@ source ./scripts/includes.sh
 setup $@
 export TF_IN_AUTOMATION=1
 
-# Provision infrastructure
+# Provision infrastructure on Hetzner Cloud
 cd ./terraform
 terraform_init $env
 terraform apply -input=false -auto-approve -var-file ./vars/$env.tfvars
 cd -
 
-# Create a cluster
-cd ./ansible; ansible-playbook main.yml --skip-tags user --inventory inventory.py; cd -
+# Create a cluster from provisioned infrastructure
+cd ./ansible; ansible-playbook cluster.yml; cd -
 
 # Deploy applications onto the cluster
 export KUBECONFIG=$(pwd)/kubeconfigs/$1.yaml

@@ -1,0 +1,143 @@
+- name: Update APT package cache
+  apt:
+    update_cache: true
+    cache_valid_time: 3600
+  retries: 2
+  delay: 5
+  tags:
+    - apt
+#
+# - name: Install aptitude
+#   apt:
+#     pkg: aptitude
+#     state: present
+#   retries: 2
+#   delay: 5
+#   tags:
+#     - apt
+
+- name: Upgrade APT to the latest packages
+  apt:
+    upgrade: safe
+  retries: 2
+  delay: 5
+
+- name: Install required packages
+  apt:
+    state: present
+    pkg: "{{ host_security_required_packages }}"
+  retries: 2
+  delay: 5
+  tags:
+    - ufw
+
+- name: Adjust APT update intervals
+  copy:
+    src: etc/apt/apt.conf.d/10periodic
+    dest: /etc/apt/apt.conf.d/10periodic
+    owner: root
+    group: root
+    mode: 0644
+  tags:
+    - apt
+
+- name: Combine host_security_sshd_settings and host_security_sshd_settings_user (if defined)
+  set_fact:
+    host_security_sshd_settings: "{{ host_security_sshd_settings | combine(host_security_sshd_settings_user|default({})) }}"
+  tags:
+    - ssh
+
+- name: Ensure sshd_config setting
+  lineinfile:
+    dest: "/etc/ssh/sshd_config"
+    regexp: "{{ item }}"
+    line: "{{ host_security_sshd_settings[item] }}"
+    state: "present"
+  notify: Restart SSH
+  with_items:
+    - "{{ host_security_sshd_settings | list }}"
+  tags:
+    - ssh
+
+- name: Combine host_security_sysctl_settings and host_security_sysctl_settings_user (if defined)
+  set_fact:
+    host_security_sysctl_settings: "{{ host_security_sysctl_settings | combine(host_security_sysctl_settings_user|default({})) }}"
+  tags:
+    - sysctl
+
+- name: Sysctl settings
+  sysctl:
+    name: "{{ item }}"
+    value: "{{ host_security_sysctl_settings[item] }}"
+    sysctl_set: yes
+  with_items:
+    - "{{ host_security_sysctl_settings | list }}"
+  tags:
+    - sysctl
+
+- name: Combine host_security_ufw_defaults and host_security_ufw_defaults_user (if defined)
+  set_fact:
+    host_security_ufw_defaults: "{{ host_security_ufw_defaults | combine(host_security_ufw_defaults_user|default({})) }}"
+  tags:
+    - ufw
+
+- name: UFW - Configure defaults
+  lineinfile:
+    dest: /etc/default/ufw
+    regexp: "{{ item }}"
+    line: "{{ host_security_ufw_defaults[item] }}"
+    state: present
+  notify: Reload UFW
+  with_items:
+    - "{{ host_security_ufw_defaults | list }}"
+  tags:
+    - ufw
+
+- name: UFW - Apply firewall rules
+  ufw:
+    rule: "{{ item.rule }}"
+    interface: "{{ item.interface | default('') }}"
+    direction: "{{ item.direction | default('in') }}"
+    from_ip: "{{ item.from_ip | default('any') }}"
+    to_ip: "{{ item.to_ip | default('any') }}"
+    from_port: "{{ item.from_port | default('') }}"
+    to_port: "{{ item.to_port | default('') }}"
+    protocol: "{{ item.protocol | default('any') }}"
+    log: "{{ item.log | default(False) }}"
+  with_items: "{{ host_security_ufw_rules }}"
+  tags:
+    - ufw
+    - ufwrules
+
+- name: UFW - Allow configured networks to communicate
+  ufw:
+    rule: allow
+    src: "{{ item }}"
+  with_items:
+    - "{{ host_security_ufw_allow_networks }}"
+  when: host_security_ufw_allow_networks is defined
+  tags:
+    - ufw
+
+- name: UFW - Setup logging
+  ufw:
+    logging: "{{ host_security_ufw_logging }}"
+  tags:
+    - ufw
+
+- name: Update Sshguard white list
+  lineinfile:
+    dest: /etc/sshguard/whitelist
+    regexp: "^{{ item }}"
+    line: "{{ item }}"
+    state: present
+  with_items:
+    - "{{ host_security_sshguard_whitelist }}"
+  tags:
+    - sshguard
+
+- name: UFW - Enable firewall/iptables
+  ufw:
+    state: enabled
+  tags:
+    - ufw

@@ -7,11 +7,11 @@
   tags:
     - apt
 
-- name: Upgrade APT to the latest packages
-  apt:
-    upgrade: safe
-  retries: 2
-  delay: 5
+# - name: Upgrade APT to the latest packages
+#   apt:
+#     upgrade: safe
+#   retries: 2
+#   delay: 5
 
 - name: Install required packages
   apt:
@@ -132,3 +132,7 @@
     state: enabled
   tags:
     - ufw
+# 
+# - name: Reboot hosts
+#   reboot:
+#     reboot_timeout: 600

@@ -24,7 +24,7 @@ host_security_ufw_allow_networks:
 host_security_ufw_defaults_user:
   "^DEFAULT_FORWARD_POLICY": 'DEFAULT_FORWARD_POLICY="ACCEPT"'
 
-host_security_ufw_logging: on
+host_security_ufw_logging: "on"
 
 host_security_sshguard_whitelist:
   - 127.0.0.0/8

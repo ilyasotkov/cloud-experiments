@@ -11,7 +11,7 @@
 - name: Apply security settings to hosts
   hosts: cluster
   roles:
-    - role: githubixx-ansible-role-harden-linux
+    - role: host-security
   tags:
     - linux
 

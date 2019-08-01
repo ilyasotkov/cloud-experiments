@@ -16,7 +16,4 @@ cd -
 cd ./ansible; ansible-playbook cluster.yml; cd -
 
 # Deploy applications onto the cluster
-export KUBECONFIG=$(pwd)/kubeconfigs/$1.yaml
-k3s kubectl apply -f ./resources/init
-k3s kubectl apply -f https://raw.githubusercontent.com/kubernetes/dashboard/v2.0.0-beta2/aio/deploy/recommended.yaml
 ./scripts/applications.sh dev all

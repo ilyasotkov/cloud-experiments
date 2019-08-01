@@ -1,9 +1,8 @@
 #!/usr/bin/env python3
 
-import os
-import subprocess
 import json
-import yaml
+import subprocess
+
 
 def main():
     terraform_output = capture_terraform_output(terraform_directory='../terraform')

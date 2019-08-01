@@ -33,9 +33,6 @@ RUN apk --update add \
         && mkdir -p /etc/ansible \
         && echo localhost > /etc/ansible/hosts
 
-COPY ansible/requirements.yml ./ansible/
-RUN ansible-galaxy install -r ./ansible/requirements.yml
-
 ARG TERRAFORM_VERSION=0.12.5
 RUN curl -o ./terraform.zip \
         https://releases.hashicorp.com/terraform/${TERRAFORM_VERSION}/terraform_${TERRAFORM_VERSION}_linux_amd64.zip \

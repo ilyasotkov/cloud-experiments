@@ -73,7 +73,9 @@ RUN curl -L -o helm.tar.gz \
         && chmod 0700 linux-amd64/helm \
         && mv linux-amd64/helm /usr/bin \
         && helm init --client-only \
-        && helm plugin install https://github.com/databus23/helm-diff --version master
+        && helm plugin install https://github.com/databus23/helm-diff --version v2.11.0+5 \
+        && helm plugin install https://github.com/rimusz/helm-tiller --version v0.8.3 \
+        && helm tiller install
 
 ARG HELMFILE_VERSION=0.80.2
 RUN curl -L -o helmfile \

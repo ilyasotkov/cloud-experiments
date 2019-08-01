@@ -1,3 +1,10 @@
+helmDefaults:
+  wait: true
+  force: true
+  recreatePods: false
+  tillerless: true
+  tillerNamespace: kube-system
+
 releases:
 
 - name: nginx-ingress

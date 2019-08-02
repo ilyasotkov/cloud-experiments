@@ -33,7 +33,7 @@ RUN apk --update add \
         && mkdir -p /etc/ansible \
         && echo localhost > /etc/ansible/hosts
 
-ARG TERRAFORM_VERSION=0.12.5
+ARG TERRAFORM_VERSION=0.12.6
 RUN curl -o ./terraform.zip \
         https://releases.hashicorp.com/terraform/${TERRAFORM_VERSION}/terraform_${TERRAFORM_VERSION}_linux_amd64.zip \
         && unzip terraform.zip \

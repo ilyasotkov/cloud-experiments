@@ -34,6 +34,28 @@ releases:
       publishService:
         enabled: true
 
+- name: external-dns
+  installed: true
+  namespace: kube-system
+  labels:
+    app: external-dns
+  chart: stable/external-dns
+  version: 2.4.2
+  values:
+  - rbac:
+      create: true
+    interval: 1m
+    policy: sync
+    sources:
+    - ingress
+    provider: cloudflare
+    cloudflare:
+      email: {{ requiredEnv "CLOUDFLARE_EMAIL" }}
+      apiKey: {{ requiredEnv "CLOUDFLARE_TOKEN" }}
+      proxied: false
+    domainFilters:
+    - flexp.live
+
 - name: forms-app
   installed: true
   namespace: default

@@ -5,3 +5,5 @@ repositories:
   url: https://kubernetes-charts-incubator.storage.googleapis.com
 - name: exekube
   url: https://exekube.github.io/charts
+- name: jetstack
+  url: https://charts.jetstack.io

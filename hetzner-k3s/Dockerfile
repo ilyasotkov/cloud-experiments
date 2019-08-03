@@ -79,5 +79,3 @@ RUN curl -L -o helmfile \
         https://github.com/roboll/helmfile/releases/download/v${HELMFILE_VERSION}/helmfile_linux_amd64 \
         && chmod 0700 helmfile \
         && mv helmfile /usr/bin
-
-COPY . .

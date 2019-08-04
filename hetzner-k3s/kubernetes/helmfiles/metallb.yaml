@@ -15,7 +15,10 @@ releases:
   chart: stable/metallb
   version: 0.10.0
   values:
-  - configInline:
+  - speaker:
+      nodeSelector:
+        kubernetes.io/hostname: master
+    configInline:
       address-pools:
       - name: default
         protocol: layer2

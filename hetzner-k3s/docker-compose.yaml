@@ -3,6 +3,8 @@ version: "3.7"
 services:
   controller:
     build: .
+    environment:
+    - KUBECONFIG=/project/kubeconfigs/$ENV.yaml
     volumes:
     - .:/project
     - ./terraform/.terraformrc:/root/.terraformrc

@@ -13,11 +13,17 @@ releases:
   labels:
     app: nginx-ingress
   chart: stable/nginx-ingress
-  version: 1.6.18
+  version: 1.12.1
   values:
   - rbac:
       create: true
     controller:
+      autoscaling:
+        enabled: true
+        minReplicas: 2
+        maxReplicas: 5
+        targetCPUUtilizationPercentage: 75
+        targetMemoryUtilizationPercentage: 75
       stats:
         enabled: true
       metrics:

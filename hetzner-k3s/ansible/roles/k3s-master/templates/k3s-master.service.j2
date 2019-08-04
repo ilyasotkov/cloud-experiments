@@ -9,7 +9,8 @@ ExecStart=/usr/local/bin/k3s server \
         --advertise-address {{ master_ip }} \
         --node-ip {{ master_ip }} \
         --flannel-iface {{ flannel_iface }} \
-        --no-deploy traefik
+        --no-deploy traefik \
+        --no-deploy servicelb
 KillMode=process
 Delegate=yes
 LimitNOFILE=infinity

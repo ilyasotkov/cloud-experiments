@@ -1,5 +1,13 @@
 # k3s cluster on Hetzner Cloud
 
+## Directory structure
+
+- `scripts` automation scripts for invoking tasks
+- `terraform` infrastructure code
+- `ansible` code for provisioning or upgrading nodes in a cluster
+- `resources` Kubernetes applications manifests (using Helmfile)
+- `ssh_pubkeys` public keys for SSHing into nodes
+
 ## Prerequisites
 
 - Docker Desktop on local workstation
@@ -11,14 +19,6 @@
 ```sh
 docker-compose build && docker-compose run --rm controller bash
 ```
-
-## Directory structure
-
-- `scripts` automation scripts for invoking tasks
-- `terraform` infrastructure code
-- `ansible` code for provisioning or upgrading nodes in a cluster
-- `resources` Kubernetes applications manifests (using Helmfile)
-- `ssh_pubkeys` public keys for SSHing into nodes
 
 ## Deploy whole cluster and all apps
 
@@ -44,4 +44,10 @@ where `$ENV` can be one of `dev`, `stag`, or `prod`.
 
 ```sh
 ENV=dev docker-compose up dashboard
+```
+
+### hetzner-k3s
+
+```sh
+kubectl -n kube-system describe secret $(kubectl -n kube-system get secret | grep admin-user | awk '{print $1}')
 ```

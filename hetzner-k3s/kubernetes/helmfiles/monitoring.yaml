@@ -37,7 +37,7 @@ releases:
         namespace: kube-system
 
 - name: metrics-server
-  installed: false
+  installed: true
   namespace: kube-system
   labels:
     app: metrics-server

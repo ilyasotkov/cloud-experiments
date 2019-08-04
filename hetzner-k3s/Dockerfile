@@ -44,7 +44,10 @@ ARG K3S_VERSION=0.7.0
 RUN curl -L -o ./k3s \
         https://github.com/rancher/k3s/releases/download/v${K3S_VERSION}/k3s \
         && chmod +x ./k3s \
-        && mv k3s /usr/bin
+        && mv k3s /usr/bin \
+        && ln -f /usr/bin/k3s /usr/bin/kubectl \
+        && ln -f /usr/bin/k3s /usr/bin/crictl \
+        && ln -f /usr/bin/k3s /usr/bin/ctr
 
 ARG HETZNER_CLI_VERSION=1.13.0
 RUN curl -L -o hcloud.tar.gz \

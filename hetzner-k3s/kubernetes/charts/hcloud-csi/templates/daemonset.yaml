@@ -1,0 +1,88 @@
+apiVersion: apps/v1
+kind: DaemonSet
+metadata:
+  name: {{ template "hcloud-csi.fullname" . }}-node
+  labels:
+    heritage: {{ .Release.Service | quote }}
+    release: {{ .Release.Name | quote }}
+    chart: {{ template "hcloud-csi.chart" . }}
+    app: {{ template "hcloud-csi.name" . }}
+spec:
+  selector:
+    matchLabels:
+      app: {{ template "hcloud-csi.name" . }}
+      release: {{ .Release.Name }}
+  template:
+    metadata:
+      labels:
+        app: {{ template "hcloud-csi.name" . }}
+        release: {{ .Release.Name }}
+    spec:
+      serviceAccount: {{ template "hcloud-csi.fullname" . }}
+      hostNetwork: true
+      containers:
+        - name: csi-node-driver-registrar
+          image: {{ .Values.registrar.image }}:{{ .Values.registrar.imageTag }}
+          imagePullPolicy: {{ .Values.registrar.imagePullPolicy }}
+          args:
+            - --v=5
+            - --csi-address=/csi/csi.sock
+            - --kubelet-registration-path=/var/lib/kubelet/plugins/csi.hetzner.cloud/csi.sock
+          env:
+            - name: KUBE_NODE_NAME
+              valueFrom:
+                fieldRef:
+                  apiVersion: v1
+                  fieldPath: spec.nodeName
+          volumeMounts:
+            - name: plugin-dir
+              mountPath: /csi
+            - name: registration-dir
+              mountPath: /registration
+          securityContext:
+            privileged: true
+            capabilities:
+              add: ["SYS_ADMIN"]
+            allowPrivilegeEscalation: true
+        - name: hcloud-csi-driver
+          image: {{ .Values.driver.image }}:{{ .Values.driver.imageTag }}
+          imagePullPolicy: {{ .Values.driver.imagePullPolicy }}
+          env:
+            - name: CSI_ENDPOINT
+              value: unix:///csi/csi.sock
+            - name: HCLOUD_TOKEN
+              valueFrom:
+                secretKeyRef:
+{{- if .Values.hcloudToken.createSecret }}
+                  name: {{ template "hcloud-csi.fullname" . }}
+                  key: token
+{{- else }}
+{{ toYaml .Values.hcloudToken.secretKeyRef | indent 18 }}
+{{- end }}
+          volumeMounts:
+            - name: kubelet-dir
+              mountPath: /var/lib/kubelet
+              mountPropagation: "Bidirectional"
+            - name: plugin-dir
+              mountPath: /csi
+            - name: device-dir
+              mountPath: /dev
+          securityContext:
+            privileged: true
+      volumes:
+        - name: kubelet-dir
+          hostPath:
+            path: {{ .Values.hostPathVolumes.kubeletDir }}
+            type: Directory
+        - name: plugin-dir
+          hostPath:
+            path: {{ .Values.hostPathVolumes.pluginDir }}
+            type: DirectoryOrCreate
+        - name: registration-dir
+          hostPath:
+            path: {{ .Values.hostPathVolumes.registrationDir }}
+            type: Directory
+        - name: device-dir
+          hostPath:
+            path: {{ .Values.hostPathVolumes.deviceDir }}
+            type: Directory

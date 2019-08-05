@@ -9,7 +9,7 @@ services:
     volumes:
     - ./nginx.conf:/etc/nginx/nginx.conf:ro
   flask:
-    image: r.flexp.xyz/flask-app:latest
+    image: ${REGISTRY_URL:?err}/flask-app:1.0.0
     build: .
     # ports:
     # - "5000:5000"

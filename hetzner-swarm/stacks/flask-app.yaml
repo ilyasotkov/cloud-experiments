@@ -29,14 +29,14 @@ services:
         traefik.port: "8080"
         traefik.frontend.rule: Host:flask-app.swarm.flexp.live
         traefik.backend.loadbalancer.swarm: "true"
-        traefik.backend.healthcheck.path: /ping
+        # traefik.backend.healthcheck.path: /ping
         traefik.protocol: http
     networks:
     - internal
     - traefik
 
   flask:
-    image: r.swarm.flexp.live/flask-app:latest
+    image: r.swarm.flexp.live/flask-app:1.0.0
     deploy:
       replicas: 1
       update_config: *update-config

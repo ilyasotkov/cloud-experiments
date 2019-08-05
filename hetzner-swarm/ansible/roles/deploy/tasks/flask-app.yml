@@ -25,6 +25,8 @@
   docker_stack:
     state: present
     with_registry_auth: yes
+    resolve_image: always
+    prune: yes
     name: flask-app
     compose:
     - /stacks/flask-app.yaml

@@ -7,14 +7,15 @@ networks:
 
 services:
   nginx:
-    image: nginx:latest
+    image: nginx:1.16.0-alpine
     networks:
       - traefik
       - internal
     deploy:
+      replicas: 3
       labels:
         traefik.enable: "true"
         traefik.docker.network: traefik
         traefik.port: "80"
-        traefik.frontend.rule: Host:my-app.swarm.flexp.live
+        traefik.frontend.rule: Host:nginx-app.swarm.flexp.live
         traefik.protocol: http

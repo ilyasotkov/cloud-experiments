@@ -1,0 +1,23 @@
+- name: Create /acme.json if doesn't exist yet
+  file:
+    state: touch
+    path: /acme.json
+    mode: 0600
+
+- name: Stat traefik config file
+  stat:
+    path: /stacks/configs/traefik/config.toml
+  register: traefik_config_file
+
+- name: Deploy traefik stack
+  docker_stack:
+    state: present
+    name: traefik
+    with_registry_auth: yes
+    compose:
+    - /stacks/traefik.yaml
+  environment:
+    TRAEFIK_CONFIG_CHECKSUM: "{{ traefik_config_file.stat.checksum | truncate(10, True, '') }}"
+
+- name: Wait for deployment to succeed
+  script: docker-stack-wait.sh -t 90 traefik

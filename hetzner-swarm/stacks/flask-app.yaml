@@ -23,7 +23,7 @@ services:
         traefik.enable: "true"
         traefik.docker.network: traefik
         traefik.port: "8888"
-        traefik.frontend.rule: Host:api.flexp.xyz
+        traefik.frontend.rule: Host:flask-app.swarm.flexp.live
         traefik.protocol: http
     networks:
     - internal

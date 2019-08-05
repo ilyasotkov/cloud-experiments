@@ -30,7 +30,7 @@ services:
         traefik.enable: "true"
         traefik.docker.network: traefik
         traefik.port: "80"
-        traefik.frontend.rule: Host:r.flexp.xyz
+        traefik.frontend.rule: Host:r.swarm.flexp.live
         traefik.protocol: http
         # To create a new user:password pair:
         # export HTPASSWD_USER=admin

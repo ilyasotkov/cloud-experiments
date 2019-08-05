@@ -1,0 +1,10 @@
+- name: Deploy nginx-app stack
+  docker_stack:
+    state: present
+    name: nginx-app
+    with_registry_auth: yes
+    compose:
+    - /stacks/nginx-app.yaml
+
+- name: Wait for nginx-app deployment to succeed
+  script: docker-stack-wait.sh -t 90 nginx-app

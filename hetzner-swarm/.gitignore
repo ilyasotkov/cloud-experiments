@@ -3,3 +3,5 @@
 .terraformrc
 .ssh/
 __pycache__
+secrets/**
+!secrets/.keep

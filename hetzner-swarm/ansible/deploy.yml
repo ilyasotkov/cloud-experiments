@@ -1,0 +1,4 @@
+- name: Deploy apps to Docker Swarm cluster
+  hosts: managers[0]
+  roles:
+    - role: deploy

@@ -1,0 +1,20 @@
+version: "3.7"
+
+networks:
+  internal: {}
+  traefik:
+    external: true
+
+services:
+  nginx:
+    image: nginx:latest
+    networks:
+      - traefik
+      - internal
+    deploy:
+      labels:
+        traefik.enable: "true"
+        traefik.docker.network: traefik
+        traefik.port: "80"
+        traefik.frontend.rule: Host:my-app.swarm.flexp.live
+        traefik.protocol: http

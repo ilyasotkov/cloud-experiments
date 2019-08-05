@@ -1,0 +1,75 @@
+- name: Create /acme.json
+  file:
+    state: touch
+    path: /acme.json
+    mode: 0600
+
+- name: Copy all docker configuration to leader manager node
+  synchronize:
+    src: "{{ local_path }}/stacks/"
+    dest: /stacks/
+    delete: yes
+
+# - docker_login:
+#     registry_url: https://r.flexp.xyz/v2
+#     username: admin
+#     password: "{{ registry_password }}"
+#   vars:
+#     registry_password: !vault |
+#       $ANSIBLE_VAULT;1.1;AES256
+#       62316333333836636263663534633134333430303733366639323264306461623733636436356137
+#       3631643966386638376233316561363465626532643135380a336432613936616161326661383530
+#       63303564306665666234353039323237653639663735633839326466303534616233636164663137
+#       6564633134653534360a353834386636643932646135393238336535653334363633616466616261
+#       34373835616138663364646532383637663237633538393633363231343834653663303130376366
+#       3039333238653164613430343761393839653633646661386561
+
+- stat:
+    path: /stacks/configs/docker-registry/config.yaml
+  register: registry_config_file
+- stat:
+    path: /stacks/configs/docker-registry/nginx.conf
+  register: registry_proxy_config_file
+- stat:
+    path: /stacks/configs/traefik/config.toml
+  register: traefik_config_file
+- stat:
+    path: /stacks/configs/flask-app/nginx.conf
+  register: flask_app_nginx_config_checksum
+- debug:
+    var: flask_app_nginx_config_checksum
+
+- name: Deploy traefik stack
+  docker_stack:
+    state: present
+    name: traefik
+    compose:
+    - /stacks/traefik.yaml
+  environment:
+    TRAEFIK_CONFIG_CHECKSUM: "{{ traefik_config_file.stat.checksum | truncate(10, True, '') }}"
+
+- name: Deploy docker-registry stack
+  docker_stack:
+    state: absent
+    name: docker-registry
+    compose:
+    - /stacks/docker-registry.yaml
+  environment:
+    REGISTRY_CONFIG_CHECKSUM: "{{ registry_config_file.stat.checksum | truncate(10, True, '') }}"
+    NGINX_CONFIG_CHECKSUM: "{{ registry_proxy_config_file.stat.checksum | truncate(10, True, '') }}"
+
+- name: Deploy nginx-app stack
+  docker_stack:
+    state: present
+    name: nginx-app
+    compose:
+    - /stacks/nginx-app.yaml
+#
+# - name: Deploy flask-app stack
+#   docker_stack:
+#     state: present
+#     name: flask-app
+#     compose:
+#     - /stacks/flask-app.yaml
+#   environment:
+#     FLASK_APP_NGINX_CONFIG_CHECKSUM: "{{ flask_app_nginx_config_checksum.stat.checksum | truncate(10, True, '') }}"

@@ -1,5 +1,9 @@
 version: "3.7"
 
+x-update-config: &update-config
+  order: start-first
+  failure_action: rollback
+
 networks:
   internal: {}
   traefik:
@@ -7,32 +11,42 @@ networks:
 
 configs:
   nginx_config:
-    name: flask-app-nginx-config-${FLASK_APP_NGINX_CONFIG_CHECKSUM}
+    name: flask-app-nginx-config-${FLASK_APP_NGINX_CONFIG_CHECKSUM:?err}
     file: ./configs/flask-app/nginx.conf
 
 services:
   nginx:
-    image: nginx:1.17.1-alpine
-    ports:
-    - "8888:8888"
+    image: nginx:1.17.2-alpine
     configs:
     - source: nginx_config
       target: /etc/nginx/nginx.conf
     deploy:
+      replicas: 1
+      update_config: *update-config
       labels:
         traefik.enable: "true"
         traefik.docker.network: traefik
-        traefik.port: "8888"
+        traefik.port: "8080"
         traefik.frontend.rule: Host:flask-app.swarm.flexp.live
+        traefik.backend.loadbalancer.swarm: "true"
+        traefik.backend.healthcheck.path: /ping
         traefik.protocol: http
     networks:
     - internal
     - traefik
+
   flask:
-    image: r.flexp.xyz/flask-app:latest
+    image: r.swarm.flexp.live/flask-app:latest
+    deploy:
+      replicas: 1
+      update_config: *update-config
     networks:
     - internal
+
   db:
     image: mongo
+    deploy:
+      replicas: 1
+      update_config: *update-config
     networks:
     - internal

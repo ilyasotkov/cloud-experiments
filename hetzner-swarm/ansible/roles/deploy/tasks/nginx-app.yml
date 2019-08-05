@@ -1,3 +1,8 @@
+- name: Stat nginx-app nginx.conf
+  stat:
+    path: /stacks/configs/nginx-app/nginx.conf
+  register: config_file
+
 - name: Deploy nginx-app stack
   docker_stack:
     state: present
@@ -5,6 +10,8 @@
     with_registry_auth: yes
     compose:
     - /stacks/nginx-app.yaml
+  environment:
+    NGINX_CONFIG_CHECKSUM: "{{ config_file.stat.checksum | truncate(10, True, '') }}"
 
 - name: Wait for nginx-app deployment to succeed
   script: docker-stack-wait.sh -t 90 nginx-app

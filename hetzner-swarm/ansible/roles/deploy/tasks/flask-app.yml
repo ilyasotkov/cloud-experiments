@@ -1,7 +1,7 @@
 - name: Stat flask-app nginx.conf
   stat:
-    path: "{{ stack_path }}/configs/flask-app/nginx.conf"
-  register: flask_app_nginx_config_checksum
+    path: /stacks/configs/flask-app/nginx.conf
+  register: flask_nginx_conf
 
 - name: Login into private Docker registry
   docker_login:
@@ -9,8 +9,8 @@
     username: admin
     password: "{{ password }}"
     reauthorize: true
-    timeout: 60
-    validate_certs: no
+    timeout: 90
+    validate_certs: yes
   vars:
     password: !vault |
       $ANSIBLE_VAULT;1.1;AES256
@@ -29,7 +29,7 @@
     compose:
     - /stacks/flask-app.yaml
   environment:
-    FLASK_APP_NGINX_CONFIG_CHECKSUM: "{{ flask_app_nginx_config_checksum.stat.checksum | truncate(10, True, '') }}"
+    FLASK_APP_NGINX_CONFIG_CHECKSUM: "{{ flask_nginx_conf.stat.checksum | truncate(10, True, '') }}"
 
-- name: Wait for nginx-app deployment to succeed
-  script: docker-stack-wait.sh -t 90 flask-app
+- name: Wait for flask-app deployment to succeed
+  script: docker-stack-wait.sh -t 120 flask-app

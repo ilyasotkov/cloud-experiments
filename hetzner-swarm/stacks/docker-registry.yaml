@@ -1,5 +1,9 @@
 version: "3.7"
 
+x-update-config: &update-config
+  order: start-first
+  failure_action: rollback
+
 networks:
   internal: {}
   traefik:
@@ -17,8 +21,8 @@ volumes:
   data: {}
 
 services:
-  proxy:
-    image: nginx:1.17.1
+  nginx:
+    image: nginx:1.17.1-alpine
     networks:
       - traefik
       - internal
@@ -26,16 +30,18 @@ services:
       - source: nginx_config
         target: /etc/nginx/nginx.conf
     deploy:
+      replicas: 1
+      update_config: *update-config
       labels:
         traefik.enable: "true"
         traefik.docker.network: traefik
         traefik.port: "80"
         traefik.frontend.rule: Host:r.swarm.flexp.live
+        traefik.backend.loadbalancer.swarm: "true"
         traefik.protocol: http
         # To create a new user:password pair:
         # export HTPASSWD_USER=admin
-        # read -s HTPASSWD_PW
-        # export HTPASSWD_PW
+        # read -s HTPASSWD_PW && export HTPASSWD_PW
         # echo $(htpasswd -nbB $HTPASSWD_USER $HTPASSWD_PW) | sed -e s/\\$/\\$\\$/g
         traefik.frontend.auth.basic.users: admin:$$2y$$05$$VQYShcIN2K.qfy0SV8vJpOUHMdeOzcDVcpMC08mhKobH8vQccnrhq
 
@@ -45,8 +51,9 @@ services:
       - data:/var/lib/registry
     networks:
       - internal
+    deploy:
+      replicas: 1
+      update_config: *update-config
     configs:
       - source: registry_config
         target: /etc/docker/registry/config.yml
-    deploy:
-      replicas: 1

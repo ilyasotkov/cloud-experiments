@@ -5,17 +5,32 @@ networks:
   traefik:
     external: true
 
+configs:
+  nginx_config:
+    name: nginx-app-nginx-config-${NGINX_CONFIG_CHECKSUM}
+    file: ./configs/nginx-app/nginx.conf
+
 services:
   nginx:
-    image: nginx:1.16.0-alpine
+    image: nginx:1.17.2-alpine
     networks:
       - traefik
       - internal
+    configs:
+    - source: nginx_config
+      target: /etc/nginx/nginx.conf
     deploy:
-      replicas: 3
+      replicas: 2
+      update_config:
+        order: start-first
+        failure_action: rollback
+        delay: 5s
+        monitor: 5s
       labels:
         traefik.enable: "true"
         traefik.docker.network: traefik
+        traefik.backend.loadbalancer.swarm: "true"
+        traefik.backend.healthcheck.path: /
         traefik.port: "80"
         traefik.frontend.rule: Host:nginx-app.swarm.flexp.live
         traefik.protocol: http

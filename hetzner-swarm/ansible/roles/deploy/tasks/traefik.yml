@@ -19,5 +19,5 @@
   environment:
     TRAEFIK_CONFIG_CHECKSUM: "{{ traefik_config_file.stat.checksum | truncate(10, True, '') }}"
 
-- name: Wait for deployment to succeed
+- name: Wait for deployment to finish
   script: docker-stack-wait.sh -t 90 traefik

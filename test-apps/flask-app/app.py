@@ -11,13 +11,15 @@ client = MongoClient('db:27017')
 db = client.test_database
 
 
-@app.route("/")
+@app.route('/')
 def hello():
-    return "hello from flask"
+    return 'hello from flask'
 
-@app.route("/ping")
+
+@app.route('/ping')
 def ping():
-    return "pong"
+    return 'pong'
 
-if __name__ == "__main__":
+
+if __name__ == '__main__':
     app.run()

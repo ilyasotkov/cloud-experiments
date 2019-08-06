@@ -1,0 +1,27 @@
+- name: Check if acme.json is present locally
+  delegate_to: localhost
+  stat:
+    path: "{{ secrets_path }}/acme.json"
+  register: acme_file_local
+
+- name: Create empty acme.json if not present
+  when: not acme_file_local.stat.exists
+  file:
+    state: touch
+    path: /acme.json
+    mode: 0600
+
+- name: Upload acme.json to remote server if exists locally but not on remote server
+  when: acme_file_local.stat.exists
+  copy:
+    src: "{{ secrets_path }}/acme.json"
+    dest: /acme.json
+    force: no
+    mode: 0600
+    decrypt: yes
+
+- name: Update local copy of acme.json
+  fetch:
+    src: /acme.json
+    dest: "{{ secrets_path }}/acme.json"
+    flat: yes

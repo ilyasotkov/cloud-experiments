@@ -1,0 +1,97 @@
+- name: Ensure all docker dependencies are present
+  apt:
+    state: present
+    force: yes
+    update_cache: yes
+    name:
+      - apt-transport-https
+      - ca-certificates
+      - curl
+      - gnupg-agent
+      - software-properties-common
+      - python3-pkg-resources
+      - python3-pip
+      - python3-setuptools
+
+- name: Install pip packages required for docker_stack Ansible module
+  pip:
+    state: present
+    name:
+      - jsondiff
+      - pyyaml
+      - docker-py
+
+- name: Ensure Docker's official apt GPG key is present
+  apt_key:
+    url: https://download.docker.com/linux/ubuntu/gpg
+    state: present
+
+- name: Ensure docker stable repository is present
+  apt_repository:
+    repo: "deb [arch=amd64] https://download.docker.com/linux/{{ ansible_distribution|lower }} {{ ansible_distribution_release }} stable"
+    state: present
+
+- name: Ensure apt package index is updated and packages are upgraded
+  apt:
+    update_cache: yes
+    upgrade: no
+
+- name: Ensure docker-ce and docker-ce-cli packages are installed
+  apt:
+    state: present
+    force: yes
+    update_cache: yes
+    only_upgrade: no
+    name:
+      - docker-ce={{ docker_version }}
+      - docker-ce-cli={{ docker_version }}
+
+- name: Ensure containerd.io package is installed.
+  apt:
+    name: containerd.io
+    update_cache: yes
+    state: present
+
+- name: Ensure Docker service is set to start on boot
+  systemd:
+    name: docker
+    state: started
+    enabled: yes
+
+- name: Ensure the Docker Engine is working properly
+  shell: docker run --rm hello-world
+  no_log: yes
+
+- name: Ensure docker group exists
+  group:
+    name: docker
+    state: present
+
+- name: Ensure ansible_user is in docker group
+  user:
+    name: "{{ ansible_user }}"
+    shell: /bin/bash
+    groups: docker
+    append: yes
+
+- name: As the swarm leader manager, init the cluster
+  docker_swarm:
+    state: present
+    advertise_addr: "{{ node_advertise_address }}"
+    rotate_manager_token: yes
+    rotate_worker_token: yes
+  register: swarm_initialized
+  when:
+    - swarm_role == 'leader_manager'
+
+- name: Join cluster as a worker node
+  docker_swarm:
+    state: join
+    advertise_addr: "{{ node_advertise_address }}"
+    join_token: "{{ hostvars[groups['managers'][0]].swarm_initialized.swarm_facts.JoinTokens.Worker }}"
+    remote_addrs:
+    - "{{ hostvars[item]['node_advertise_address'] }}"
+  with_items:
+  - "{{ groups['managers'] }}"
+  when:
+    - swarm_role == 'worker'

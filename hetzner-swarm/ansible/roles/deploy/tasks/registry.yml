@@ -1,0 +1,22 @@
+- name: Stat docker-registry config.yaml
+  stat:
+    path: /stacks/configs/docker-registry/nginx.conf
+  register: registry_config_file
+
+- name: Stat docker-registry nginx.conf
+  stat:
+    path: /stacks/configs/docker-registry/nginx.conf
+  register: registry_proxy_config_file
+
+- name: Deploy docker-registry stack
+  docker_stack:
+    state: present
+    name: docker-registry
+    compose:
+    - /stacks/docker-registry.yaml
+  environment:
+    REGISTRY_CONFIG_CHECKSUM: "{{ registry_config_file.stat.checksum | truncate(10, True, '') }}"
+    NGINX_CONFIG_CHECKSUM: "{{ registry_proxy_config_file.stat.checksum | truncate(10, True, '') }}"
+
+- name: Wait for stack deployment to finish
+  script: docker-stack-wait.sh docker-registry

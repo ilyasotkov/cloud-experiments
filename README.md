@@ -11,3 +11,15 @@ Experimenting with modern cloud tech
 ### linode-k3s
 
 [rancher/k3s](https://github.com/rancher/k3s) cluster on Linode with Terraform and Ansible
+
+### hetzner-swarm
+
+[docker/swarm](https://github.com/docker/swarm) cluster on Hetzner Cloud with Terraform and Ansible
+
+### hetzner-k3s
+
+[rancher/k3s](https://github.com/rancher/k3s) cluster on Hetzner Cloud with Terraform and Ansible
+
+### apps/flask-app
+
+An example custom application used for containerization

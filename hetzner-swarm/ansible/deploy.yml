@@ -1,3 +1,12 @@
+- hosts: cluster
+  gather_facts: no
+  tasks:
+    - name: Create directory for fluent-bit socket
+      file:
+        path: /tmp/fluent-bit
+        state: directory
+        mode: "0777"
+
 - name: Deploy apps to Docker Swarm cluster
   hosts: managers[0]
   gather_facts: no

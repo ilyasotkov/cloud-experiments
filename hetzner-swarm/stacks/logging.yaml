@@ -1,0 +1,66 @@
+version: "3.7"
+
+networks:
+  logging:
+    name: logging
+
+# configs:
+#   config:
+#     name: fluentbit-${FLUENTBIT_CONFIG_CHECKSUM:?err}
+#     file: ./configs/logging/fluent-bit.conf
+
+volumes:
+  elastic-data: {}
+
+services:
+  nginx:
+    image: nginx:1.17.2-alpine
+    ports:
+      - 8888:80
+    networks:
+      - logging
+    logging:
+      driver: fluentd
+      options:
+        fluentd-address: unix:///tmp/fluent-bit/fluent-bit.sock
+        fluentd-async-connect: "true"
+        fluentd-retry-wait: 1s
+        fluentd-max-retries: "50"
+        #tag: nginx
+
+  forwarder:
+    image: fluent/fluent-bit:1.0.4
+    volumes:
+    - ./configs/logging/fluent-bit.conf:/fluent-bit/etc/fluent-bit.conf
+    - /tmp/fluent-bit:/tmp/fluent-bit
+    # deploy:
+    #   mode: global
+    networks:
+      - logging
+    command: ["/fluent-bit/bin/fluent-bit", "-c", "/fluent-bit/etc/fluent-bit.conf"]
+
+  elasticsearch:
+    image: elasticsearch:7.3.0
+    environment:
+      node.name: swarm-logs
+      discovery.type: single-node
+      bootstrap.memory_lock: "true"
+      ES_JAVA_OPTS: -Xms512m -Xmx512m
+    volumes:
+      - elastic-data:/usr/share/elasticsearch/data
+    networks:
+      - logging
+    # logging:
+    #   driver: fluentd
+    #   options:
+    #     fluentd-address: unix:///tmp/fluent-bit/sock
+    #     fluentd-async-connect: "true"
+    #     fluentd-retry-wait: 1s
+    #     fluentd-max-retries: "50"
+    #     tag: alpha.efk.elasticsearch
+  kibana:
+    image: kibana:7.3.0
+    ports:
+      - "5601:5601"
+    networks:
+      - logging

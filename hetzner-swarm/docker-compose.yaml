@@ -6,3 +6,9 @@ services:
     volumes:
     - .:/project
     - ./terraform/.terraformrc:/root/.terraformrc
+
+  k6s:
+    image: loadimpact/k6
+    working_dir: /k6s
+    volumes:
+    - ./k6s:/k6s

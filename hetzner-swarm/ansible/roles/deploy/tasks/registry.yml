@@ -18,5 +18,5 @@
     REGISTRY_CONFIG_CHECKSUM: "{{ registry_config_file.stat.checksum | truncate(10, True, '') }}"
     NGINX_CONFIG_CHECKSUM: "{{ registry_proxy_config_file.stat.checksum | truncate(10, True, '') }}"
 
-- name: Wait for stack deployment to succeed
+- name: Wait for stack deployment to finish
   script: docker-stack-wait.sh docker-registry

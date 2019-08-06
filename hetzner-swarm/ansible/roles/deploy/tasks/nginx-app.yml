@@ -13,5 +13,5 @@
   environment:
     NGINX_CONFIG_CHECKSUM: "{{ config_file.stat.checksum | truncate(10, True, '') }}"
 
-- name: Wait for nginx-app deployment to succeed
+- name: Wait for nginx-app deployment to finish
   script: docker-stack-wait.sh -t 90 nginx-app

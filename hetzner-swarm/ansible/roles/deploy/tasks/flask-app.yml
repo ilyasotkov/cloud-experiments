@@ -33,5 +33,5 @@
   environment:
     FLASK_APP_NGINX_CONFIG_CHECKSUM: "{{ flask_nginx_conf.stat.checksum | truncate(10, True, '') }}"
 
-- name: Wait for flask-app deployment to succeed
+- name: Wait for flask-app deployment to finish
   script: docker-stack-wait.sh -t 120 flask-app

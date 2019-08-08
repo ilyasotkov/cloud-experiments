@@ -20,4 +20,4 @@
     FLUENTBIT_PARSERS_CONFIG_CHECKSUM: "{{ parsers_config.stat.checksum | truncate(10, True, '') }}"
 
 - name: Wait for efk deployment to finish
-  script: docker-stack-wait.sh -t 120 efk
+  script: docker-stack-wait.sh -t 240 efk

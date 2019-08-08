@@ -21,6 +21,7 @@ services:
     image: fluent/fluent-bit:1.2.2
     volumes:
     - /tmp/fluent-bit:/tmp/fluent-bit
+    - /var/log:/hostlog:ro
     configs:
     - source: fluentbit-conf
       target: /fluent-bit/etc/fluent-bit.conf

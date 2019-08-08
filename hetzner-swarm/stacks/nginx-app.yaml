@@ -34,3 +34,8 @@ services:
         traefik.port: "80"
         traefik.frontend.rule: Host:nginx-app.swarm.flexp.live
         traefik.protocol: http
+    logging:
+      driver: fluentd
+      options:
+        fluentd-address: unix:///tmp/fluent-bit/fluent-bit.sock
+        tag: nginx-app.nginx

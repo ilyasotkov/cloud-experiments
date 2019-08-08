@@ -1,0 +1,23 @@
+- name: Stat fluent-bit.conf
+  stat:
+    path: /stacks/configs/efk/fluent-bit.conf
+  register: fluent_bit_config
+
+- name: Stat parsers.conf
+  stat:
+    path: /stacks/configs/efk/parsers.conf
+  register: parsers_config
+
+- name: Deploy efk stack
+  docker_stack:
+    state: present
+    name: efk
+    with_registry_auth: yes
+    compose:
+    - /stacks/efk.yaml
+  environment:
+    FLUENTBIT_CONFIG_CHECKSUM: "{{ fluent_bit_config.stat.checksum | truncate(10, True, '') }}"
+    FLUENTBIT_PARSERS_CONFIG_CHECKSUM: "{{ parsers_config.stat.checksum | truncate(10, True, '') }}"
+
+- name: Wait for efk deployment to finish
+  script: docker-stack-wait.sh -t 120 efk

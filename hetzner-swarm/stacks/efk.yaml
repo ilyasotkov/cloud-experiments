@@ -1,0 +1,60 @@
+version: "3.7"
+
+networks:
+  internal: {}
+  traefik:
+    external: true
+
+configs:
+  fluentbit-conf:
+    name: fluentbit-${FLUENTBIT_CONFIG_CHECKSUM:?err}
+    file: ./configs/efk/fluent-bit.conf
+  fluentbit-parsers:
+    name: fluentbit-parsers-${FLUENTBIT_PARSERS_CONFIG_CHECKSUM:?err}
+    file: ./configs/efk/parsers.conf
+
+volumes:
+  elastic-data: {}
+
+services:
+  fluentbit:
+    image: fluent/fluent-bit:1.2.2
+    volumes:
+    - /tmp/fluent-bit:/tmp/fluent-bit
+    configs:
+    - source: fluentbit-conf
+      target: /fluent-bit/etc/fluent-bit.conf
+    - source: fluentbit-parsers
+      target: /conf/parsers.conf
+    deploy:
+      mode: global
+    networks:
+      - internal
+    command: ["/fluent-bit/bin/fluent-bit", "-c", "/fluent-bit/etc/fluent-bit.conf"]
+
+  elasticsearch:
+    image: elasticsearch:7.3.0
+    environment:
+      node.name: swarm-logs
+      discovery.type: single-node
+      bootstrap.memory_lock: "true"
+      ES_JAVA_OPTS: -Xms512m -Xmx512m
+    volumes:
+      - elastic-data:/usr/share/elasticsearch/data
+    networks:
+      - internal
+
+  kibana:
+    image: kibana:7.3.0
+    networks:
+      - internal
+      - traefik
+    deploy:
+      labels:
+        traefik.enable: "true"
+        traefik.docker.network: traefik
+        traefik.port: "5601"
+        traefik.frontend.rule: Host:kibana.swarm.flexp.live
+        traefik.backend.loadbalancer.swarm: "true"
+        traefik.protocol: http
+        traefik.frontend.auth.basic.users: admin:$$2y$$05$$MgBBTl40x4QxLEa53GINhe2sMkSHDp9nokn06H7bGO1JkwZf4Uake

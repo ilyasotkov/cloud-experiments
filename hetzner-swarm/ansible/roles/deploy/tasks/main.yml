@@ -5,11 +5,13 @@
     delete: yes
 - import_tasks: backup-acme.yml
   tags: ["acme"]
+- import_tasks: efk.yml
+  tags: ["efk"]
 - import_tasks: traefik.yml
   tags: ["traefik"]
 - import_tasks: registry.yml
   tags: ["registry"]
 - import_tasks: nginx-app.yml
   tags: ["nginx-app"]
-- import_tasks: flask-app.yml
-  tags: ["flask-app"]
+# - import_tasks: flask-app.yml
+#   tags: ["flask-app"]

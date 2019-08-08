@@ -1,7 +1,7 @@
 - name: Ensure all docker dependencies are present
   apt:
     state: present
-    force: yes
+    force: "yes"
     update_cache: yes
     name:
       - apt-transport-https

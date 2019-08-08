@@ -5,7 +5,7 @@
       file:
         path: /tmp/fluent-bit
         state: directory
-        mode: "0777"
+        mode: "1777"
 
 - name: Deploy apps to Docker Swarm cluster
   hosts: managers[0]

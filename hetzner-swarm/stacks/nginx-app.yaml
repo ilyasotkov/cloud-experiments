@@ -38,4 +38,5 @@ services:
       driver: fluentd
       options:
         fluentd-address: unix:///tmp/fluent-bit/fluent-bit.sock
-        tag: nginx-app.nginx
+        fluentd-async-connect: "true"
+        tag: nginx-app.nginx.json

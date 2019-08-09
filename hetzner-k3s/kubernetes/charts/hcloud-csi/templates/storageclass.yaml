@@ -7,7 +7,9 @@ metadata:
     release: {{ .Release.Name | quote }}
     chart: {{ template "hcloud-csi.chart" . }}
     app: {{ template "hcloud-csi.name" . }}
+{{- if .Values.storageClass.annotations }}
   annotations:
-    storageclass.kubernetes.io/is-default-class: {{ .Values.storageClass.isDefaultClass | quote }}
+{{ toYaml .Values.storageClass.annotations | indent 4 }}
+{{- end }}
 provisioner: {{ .Values.CSIDriverName }}
 volumeBindingMode: WaitForFirstConsumer

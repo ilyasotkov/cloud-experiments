@@ -22,8 +22,8 @@ spec:
       hostNetwork: true
       containers:
         - name: csi-node-driver-registrar
-          image: {{ .Values.registrar.image }}:{{ .Values.registrar.imageTag }}
-          imagePullPolicy: {{ .Values.registrar.imagePullPolicy }}
+          image: {{ .Values.nodeDriverRegistrar.image }}:{{ .Values.nodeDriverRegistrar.imageTag }}
+          imagePullPolicy: {{ .Values.nodeDriverRegistrar.imagePullPolicy }}
           args:
             - --v=5
             - --csi-address=/csi/csi.sock
@@ -45,8 +45,8 @@ spec:
               add: ["SYS_ADMIN"]
             allowPrivilegeEscalation: true
         - name: hcloud-csi-driver
-          image: {{ .Values.driver.image }}:{{ .Values.driver.imageTag }}
-          imagePullPolicy: {{ .Values.driver.imagePullPolicy }}
+          image: {{ .Values.csiDriver.image }}:{{ .Values.csiDriver.imageTag }}
+          imagePullPolicy: {{ .Values.csiDriver.imagePullPolicy }}
           env:
             - name: CSI_ENDPOINT
               value: unix:///csi/csi.sock

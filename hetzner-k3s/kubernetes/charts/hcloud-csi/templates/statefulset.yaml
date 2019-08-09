@@ -23,8 +23,8 @@ spec:
       serviceAccount: {{ template "hcloud-csi.fullname" . }}
       containers:
         - name: csi-attacher
-          image: {{ .Values.attacher.image }}:{{ .Values.attacher.imageTag }}
-          imagePullPolicy: {{ .Values.attacher.imagePullPolicy }}
+          image: {{ .Values.csiAttacher.image }}:{{ .Values.csiAttacher.imageTag }}
+          imagePullPolicy: {{ .Values.csiAttacher.imagePullPolicy }}
           args:
             - --csi-address=/var/lib/csi/sockets/pluginproxy/csi.sock
             - --v=5
@@ -37,7 +37,7 @@ spec:
               add: ["SYS_ADMIN"]
             allowPrivilegeEscalation: true
         - name: csi-provisioner
-          image: {{ .Values.provisioner.image }}:{{ .Values.provisioner.imageTag }}
+          image: {{ .Values.csiProvisioner.image }}:{{ .Values.csiProvisioner.imageTag }}
           args:
             - --provisioner={{ .Values.CSIDriverName }}
             - --csi-address=/var/lib/csi/sockets/pluginproxy/csi.sock

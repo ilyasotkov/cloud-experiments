@@ -10,7 +10,8 @@ hcloudToken:
 
 storageClass:
   name: hcloud-volumes
-  isDefaultClass: true
+  annotations:
+    storageclass.kubernetes.io/is-default-class: "true"
 
 hostPathVolumes:
   kubeletDir: /var/lib/kubelet
@@ -20,22 +21,22 @@ hostPathVolumes:
 
 CSIDriverName: csi.hetzner.cloud
 
-registrar:
+nodeDriverRegistrar:
   image: quay.io/k8scsi/csi-node-driver-registrar
   imageTag: v1.1.0
   imagePullPolicy: Always
 
-driver:
+csiDriver:
   image: hetznercloud/hcloud-csi-driver
   imageTag: 1.1.4
   imagePullPolicy: Always
 
-provisioner:
+csiProvisioner:
   image: quay.io/k8scsi/csi-provisioner
   imageTag: v1.2.1
   imagePullPolicy: Always
 
-attacher:
+csiAttacher:
   image: quay.io/k8scsi/csi-attacher
   imageTag: v1.1.1
   imagePullPolicy: Always

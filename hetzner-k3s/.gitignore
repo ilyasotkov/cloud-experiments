@@ -4,3 +4,4 @@
 .ssh/
 __pycache__
 kubeconfigs/*
+.environment

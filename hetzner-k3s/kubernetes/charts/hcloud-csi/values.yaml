@@ -3,10 +3,20 @@
 hcloudToken:
   createSecret: true
   token: ""
-  # secretKeyRef is used only if create is set to false
+  # secretKeyRef is used only if createSecret is set to false
   secretKeyRef:
     name: ""
     key: ""
+
+storageClass:
+  name: hcloud-volumes
+  isDefaultClass: true
+
+hostPathVolumes:
+  kubeletDir: /var/lib/kubelet
+  pluginDir: /var/lib/kubelet/plugins/csi.hetzner.cloud
+  registrationDir: /var/lib/kubelet/plugins_registry
+  deviceDir: /dev
 
 CSIDriverName: csi.hetzner.cloud
 
@@ -29,13 +39,3 @@ attacher:
   image: quay.io/k8scsi/csi-attacher
   imageTag: v1.1.1
   imagePullPolicy: Always
-
-hostPathVolumes:
-  kubeletDir: /var/lib/kubelet
-  pluginDir: /var/lib/kubelet/plugins/csi.hetzner.cloud/
-  registrationDir: /var/lib/kubelet/plugins_registry/
-  deviceDir: /dev
-
-storageClass:
-  name: hcloud-volumes
-  isDefaultClass: true

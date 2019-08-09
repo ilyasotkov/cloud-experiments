@@ -3,7 +3,7 @@
 ## Directory structure
 
 - `scripts`: automation scripts for invoking tasks
-- `terraform`: infrastructure code, provisioning nodes, networks, and DNS for nodes
+- `terraform`: infrastructure code for creating nodes, networks, and DNS for nodes
 - `ansible`: code for provisioning or upgrading nodes in a cluster
 - `kubernetes`: path with Helmfile manifests
 - `ssh_pubkeys`: public keys for SSHing into nodes

@@ -1,0 +1,23 @@
+helmDefaults:
+  wait: true
+  force: true
+  recreatePods: false
+  tillerless: true
+  tillerNamespace: kube-system
+
+releases:
+
+- name: hcloud-csi
+  installed: true
+  namespace: kube-system
+  labels:
+    app: hcloud-csi
+  chart: ../charts/hcloud-csi
+  values:
+  - hcloudToken:
+      token: {{ requiredEnv "HCLOUD_TOKEN" }}
+    hostPathVolumes:
+      kubeletDir: /var/lib/rancher/k3s/agent/kubelet/
+      pluginDir: /var/lib/rancher/k3s/agent/kubelet/plugins/csi.hetzner.cloud/
+      registrationDir: /var/lib/rancher/k3s/agent/kubelet/plugins_registry/
+      deviceDir: /dev

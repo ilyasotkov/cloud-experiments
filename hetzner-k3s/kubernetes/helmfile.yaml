@@ -1,10 +1,11 @@
 helmfiles:
 - path: ./helmfiles/repositories.yaml
+- path: ./helmfiles/hcloud.yaml
 - path: ./helmfiles/metallb.yaml
   values:
   - masterIpAddress: {{ .Values.masterIpAddress }}
 - path: ./helmfiles/monitoring.yaml
-- path: ./helmfiles/ingress.yaml
-- path: ./helmfiles/forms-app.yaml
-  values:
-  - applicationDomainZone: {{ .Values.applicationDomainZone }}
+# - path: ./helmfiles/ingress.yaml
+# - path: ./helmfiles/forms-app.yaml
+#   values:
+#   - applicationDomainZone: {{ .Values.applicationDomainZone }}

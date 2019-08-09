@@ -9,7 +9,7 @@ services:
     - .:/project
     - ./terraform/.terraformrc:/root/.terraformrc
 
-  dashboard:
+  dash:
     image: bitnami/kubectl:1.14.3
     environment:
     - KUBECONFIG=/project/kubeconfigs/$ENV.yaml

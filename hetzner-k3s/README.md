@@ -2,11 +2,11 @@
 
 ## Directory structure
 
-- `scripts` automation scripts for invoking tasks
-- `terraform` infrastructure code
-- `ansible` code for provisioning or upgrading nodes in a cluster
-- `resources` Kubernetes applications manifests (using Helmfile)
-- `ssh_pubkeys` public keys for SSHing into nodes
+- `scripts`: automation scripts for invoking tasks
+- `terraform`: infrastructure code, provisioning nodes, networks, and DNS for nodes
+- `ansible`: code for provisioning or upgrading nodes in a cluster
+- `kubernetes`: path with Helmfile manifests
+- `ssh_pubkeys`: public keys for SSHing into nodes
 
 ## Prerequisites
 
@@ -18,6 +18,12 @@
 
 ```sh
 docker-compose build && docker-compose run --rm controller bash
+```
+
+## Create an SSH keypair
+
+```sh
+./scripts/bootstrap.sh dev
 ```
 
 ## Deploy whole cluster and all apps
@@ -43,10 +49,10 @@ where `$ENV` can be one of `dev`, `stag`, or `prod`.
 ## Dashboard
 
 ```sh
-ENV=dev docker-compose up dashboard
+ENV=dev docker-compose up dash
 ```
 
-### hetzner-k3s
+### Get admin-user token for kubernetes-dashboard
 
 ```sh
 kubectl -n kube-system describe secret $(kubectl -n kube-system get secret | grep admin-user | awk '{print $1}')

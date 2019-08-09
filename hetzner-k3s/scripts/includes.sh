@@ -5,6 +5,7 @@ setup() {
 
 set_vars() {
     env=$1
+    export TF_IN_AUTOMATION=1
 }
 
 check_args() {

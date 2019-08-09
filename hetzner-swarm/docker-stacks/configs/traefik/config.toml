@@ -2,6 +2,12 @@ debug = false
 logLevel = "INFO"
 defaultEntryPoints = ["https", "http"]
 
+[traefikLog]
+format = "json"
+
+[accessLog]
+format = "json"
+
 [entryPoints]
 [entryPoints.dashboard]
 address = ":8080"

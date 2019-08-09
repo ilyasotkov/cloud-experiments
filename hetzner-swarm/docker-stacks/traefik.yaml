@@ -37,3 +37,11 @@ services:
       update_config:
         parallelism: 1
         delay: 5s
+    logging:
+      driver: fluentd
+      options:
+        fluentd-address: unix:///tmp/fluent-bit/fluent-bit.sock
+        fluentd-async-connect: "true"
+        fluentd-retry-wait: "2s"
+        fluentd-max-retries: "50"
+        tag: traefik.json

@@ -34,7 +34,7 @@
 - name: Ensure apt package index is updated and packages are upgraded
   apt:
     update_cache: yes
-    upgrade: no
+    upgrade: "no"
 
 - name: Ensure docker-ce and docker-ce-cli packages are installed
   apt:

@@ -55,5 +55,5 @@ ENV=dev docker-compose up dash
 ### Get admin-user token for kubernetes-dashboard
 
 ```sh
-kubectl -n kube-system describe secret $(kubectl -n kube-system get secret | grep admin-user | awk '{print $1}')
+kubectl -n kube-system describe secret $(kubectl -n kube-system get secret | grep dash-user | awk '{print $1}')
 ```

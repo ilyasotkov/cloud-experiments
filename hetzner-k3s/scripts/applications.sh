@@ -11,7 +11,7 @@ master_ip=$(cat /tmp/tfout.json | jq -r .node_ip_addresses.value[0])
 application_domain_zone=$(cat /tmp/tfout.json | jq -r .domain_zone.value)
 cd -
 
-export KUBECONFIG=$(pwd)/kubeconfigs/$1.yaml
+export KUBECONFIG="$(pwd)/kubeconfigs/$env.yaml"
 
 flags="--quiet --state-values-set masterIpAddress=$master_ip,applicationDomainZone=$application_domain_zone"
 helmfile_selector=${2:-"all"}

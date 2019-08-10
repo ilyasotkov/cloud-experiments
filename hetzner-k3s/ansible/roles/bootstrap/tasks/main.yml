@@ -12,13 +12,13 @@
   openssh_keypair:
     comment: "{{ controller_ssh_key_comment }}"
     state: present
-    path: "{{ local_path }}/.ssh/{{ ssh_key_name }}"
+    path: "{{ local_path }}/.ssh/{{ bootstrap_ssh_key_name }}"
 
-- name: Stat {{ ssh_key_name }}.pub
+- name: Stat {{ bootstrap_ssh_key_name }}.pub
   stat:
-    path: "{{ local_path }}/.ssh/{{ ssh_key_name }}.pub"
+    path: "{{ local_path }}/.ssh/{{ bootstrap_ssh_key_name }}.pub"
   register: ssh_pub_not_moved
 
-- name: Move {{ ssh_key_name }}.pub to ssh_pubkeys if not yet moved
-  command: mv {{ local_path }}/.ssh/{{ ssh_key_name }}.pub {{ local_path }}/ssh_pubkeys/{{ ssh_key_name }}.pub
+- name: Move {{ bootstrap_ssh_key_name }}.pub to ssh_pubkeys if not yet moved
+  command: mv {{ local_path }}/.ssh/{{ bootstrap_ssh_key_name }}.pub {{ local_path }}/ssh_pubkeys/{{ bootstrap_ssh_key_name }}.pub
   when: ssh_pub_not_moved.stat.exists

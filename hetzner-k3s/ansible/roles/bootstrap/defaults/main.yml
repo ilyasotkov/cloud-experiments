@@ -1,1 +1,1 @@
-ssh_key_name: id_rsa
+bootstrap_ssh_key_name: id_rsa

@@ -17,7 +17,7 @@ def ansible_inventory_base():
                 'localhost': {
                   'local_path': '/project',
                   'ansible_connection': 'local',
-                  'controller_ssh_key_comment': 'hcloud-k3s'
+                  'controller_ssh_key_comment': 'hcloud-k3s-{{ env }}'
                 }
             }
         },

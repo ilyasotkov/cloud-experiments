@@ -1,0 +1,2 @@
+- import_playbook: ./wait-for-nodes.yml
+- import_playbook: /kubespray/recover-control-plane.yml

@@ -1,0 +1,9 @@
+- name: Wait for hosts to become available after creation
+  hosts: k8s-cluster
+  gather_facts: no
+  tasks:
+    - name: Wait for hosts to become available via SSH
+      wait_for_connection:
+        timeout: 120
+    - name: Wait for automatic system updates to finish
+      raw: systemd-run --property="After=apt-daily.service apt-daily-upgrade.service" --wait /bin/true

@@ -1,0 +1,28 @@
+helmfiles:
+# Update Helm repos
+- path: ./helmfiles/_repositories.yaml
+
+# Hetzner Cloud integrations
+# Disabled due to https://github.com/hetznercloud/csi-driver/issues/46
+- path: ./helmfiles/hcloud.yaml
+
+# Enable basic PVC functionality
+# - path: ./helmfiles/local-path-provisioner.yaml
+
+# Enable LoadBalancer type of service for ingress controller
+- path: ./helmfiles/metallb.yaml
+  values:
+  - masterIpAddress: "{{ .Values.masterIpAddress }}"
+
+# Install monitoring stack
+- path: ./helmfiles/monitoring.yaml
+
+# Install logging stack
+# - path: ./helmfiles/efk.yaml
+#   values:
+#   - applicationDomainZone: {{ .Values.applicationDomainZone }}
+
+# - path: ./helmfiles/ingress.yaml
+# - path: ./helmfiles/forms-app.yaml
+#   values:
+#   - applicationDomainZone: {{ .Values.applicationDomainZone }}

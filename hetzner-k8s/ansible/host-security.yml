@@ -1,0 +1,4 @@
+- name: Apply security settings to hosts
+  hosts: k8s-cluster
+  roles:
+    - role: host-security

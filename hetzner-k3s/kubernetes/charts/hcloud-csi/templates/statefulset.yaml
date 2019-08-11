@@ -52,8 +52,8 @@ spec:
               add: ["SYS_ADMIN"]
             allowPrivilegeEscalation: true
         - name: hcloud-csi-driver
-          image: {{ .Values.driver.image }}:{{ .Values.driver.imageTag }}
-          imagePullPolicy: {{ .Values.driver.imagePullPolicy }}
+          image: {{ .Values.csiDriver.image }}:{{ .Values.csiDriver.imageTag }}
+          imagePullPolicy: {{ .Values.csiDriver.imagePullPolicy }}
           env:
             - name: CSI_ENDPOINT
               value: unix:///var/lib/csi/sockets/pluginproxy/csi.sock

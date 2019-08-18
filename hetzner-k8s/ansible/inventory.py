@@ -88,6 +88,7 @@ def generate_ansible_inventory(terraform_output, ansible_inventory_base):
             }
             if inventory_hostname.startswith('master'):
                 ansible_inventory['kube-master']['hosts'].append(inventory_hostname)
+                ansible_inventory['kube-node']['hosts'].append(inventory_hostname)
                 ansible_inventory['etcd']['hosts'].append(inventory_hostname)
                 ansible_inventory['all']['hosts'].append(inventory_hostname)
             else:

@@ -20,7 +20,7 @@
   retries: 2
   delay: 5
   tags:
-    - ufw
+    - apt
 
 - name: Adjust APT update intervals
   copy:
@@ -132,7 +132,7 @@
     state: enabled
   tags:
     - ufw
-# 
+#
 # - name: Reboot hosts
 #   reboot:
 #     reboot_timeout: 600

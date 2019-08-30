@@ -15,15 +15,16 @@ helmfiles:
   values:
   - masterIpAddress: {{ .Values.masterIpAddress }}
 
+- path: ./helmfiles/ingress.yaml
+
 # # Install monitoring stack
 - path: ./helmfiles/monitoring.yaml
 
 # # Install logging stack
 - path: ./helmfiles/efk.yaml
   values:
-  - applicationDomainZone: {{ .Values.applicationDomainZone }}
+  - applicationDomainZone: "{{ .Values.applicationDomainZone }}"
 
-# - path: ./helmfiles/ingress.yaml
 # - path: ./helmfiles/forms-app.yaml
 #   values:
 #   - applicationDomainZone: {{ .Values.applicationDomainZone }}

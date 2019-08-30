@@ -1,5 +1,9 @@
 # nameOverride: ""
 # fullNameOverride: ""
+
+# Set to true as a temporary fix for https://github.com/rancher/k3s/issues/732
+k3sAccessFix: true
+
 hcloudToken:
   createSecret: true
   token: ""

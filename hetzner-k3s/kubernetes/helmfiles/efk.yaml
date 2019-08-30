@@ -66,17 +66,6 @@ releases:
       es:
         host: elasticsearch-master
         port: 9200
-        # index: kubernetes_cluster
-        # type: flb_type
-        # logstash_prefix: kubernetes_cluster
-        # replace_dots: "On"
-        # time_key: "@timestamp"
-        # http_user:
-        # http_passwd:
-        # tls: "off"
-        # tls_verify: "on"
-        # tls_ca: ""
-        # tls_debug: 1
 
 - name: kibana-ingress-auth
   installed: true

@@ -45,14 +45,11 @@ RUN curl -o ./terraform.zip \
         && mv terraform /usr/bin \
         && rm -rf terraform.zip
 
-ARG K3S_VERSION=0.8.0
-RUN curl -L -o ./k3s \
-        https://github.com/rancher/k3s/releases/download/v${K3S_VERSION}/k3s \
-        && chmod +x ./k3s \
-        && mv k3s /usr/bin \
-        && ln -f /usr/bin/k3s /usr/bin/kubectl \
-        && ln -f /usr/bin/k3s /usr/bin/crictl \
-        && ln -f /usr/bin/k3s /usr/bin/ctr
+ARG KUBECTL_VERSION=1.14.6
+RUN curl -L -o kubectl \
+        https://storage.googleapis.com/kubernetes-release/release/v${KUBECTL_VERSION}/bin/linux/amd64/kubectl \
+        && chmod 0700 kubectl \
+        && mv kubectl /usr/bin
 
 ARG HETZNER_CLI_VERSION=1.13.0
 RUN curl -L -o hcloud.tar.gz \
@@ -82,7 +79,7 @@ RUN curl -L -o helm.tar.gz \
         && helm plugin install https://github.com/rimusz/helm-tiller --version v0.8.3 \
         && helm tiller install
 
-ARG HELMFILE_VERSION=0.80.2
+ARG HELMFILE_VERSION=0.81.3
 RUN curl -L -o helmfile \
         https://github.com/roboll/helmfile/releases/download/v${HELMFILE_VERSION}/helmfile_linux_amd64 \
         && chmod 0700 helmfile \

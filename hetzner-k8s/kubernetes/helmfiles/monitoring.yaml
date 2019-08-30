@@ -16,7 +16,10 @@ releases:
   hooks:
   - events: ["presync"]
     command: "kubectl"
-    args: ["apply", "-f", "https://raw.githubusercontent.com/kubernetes/dashboard/v2.0.0-beta3/aio/deploy/recommended.yaml"]
+    args:
+    - apply
+    - -f
+    - https://raw.githubusercontent.com/kubernetes/dashboard/v2.0.0-beta3/aio/deploy/recommended.yaml"]
   values:
   - resources:
     - apiVersion: v1
@@ -48,8 +51,10 @@ releases:
     - --logtostderr
     - --kubelet-insecure-tls
     - --kubelet-preferred-address-types=InternalIP
-    tolerations:
-    - effect: NoSchedule
-      key: node-role.kubernetes.io/master
     nodeSelector:
       node-role.kubernetes.io/master: ""
+    tolerations:
+    - key: node-role.kubernetes.io/master
+      operator: Equal
+      value: ""
+      effect: NoSchedule

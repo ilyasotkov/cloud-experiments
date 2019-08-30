@@ -16,6 +16,8 @@ host_security_ufw_rules:
 
 host_security_ufw_allow_networks:
   - 10.0.0.0/8
+  - 172.16.0.0/12
+  - 192.168.0.0/16
 
 host_security_ufw_defaults_user:
   "^DEFAULT_FORWARD_POLICY": 'DEFAULT_FORWARD_POLICY="ACCEPT"'

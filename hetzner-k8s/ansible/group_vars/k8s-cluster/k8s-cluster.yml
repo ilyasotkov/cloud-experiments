@@ -11,7 +11,7 @@ kube_image_repo: "gcr.io/google-containers"
 local_release_dir: "/tmp/releases"
 retry_stagger: 5
 kube_cert_group: kube-cert
-kube_log_level: 2
+kube_log_level: 9
 credentials_dir: "{{ inventory_dir }}/credentials"
 kube_api_pwd: "{{ lookup('password', credentials_dir + '/kube_user.creds length=15 chars=ascii_letters,digits') }}"
 kube_users:
@@ -35,7 +35,7 @@ kube_proxy_nodeport_addresses: >-
   {%- else -%}
   []
   {%- endif -%}
-kube_encrypt_secret_data: false
+kube_encrypt_secret_data: true
 ndots: 2
 dns_mode: coredns
 enable_nodelocaldns: true

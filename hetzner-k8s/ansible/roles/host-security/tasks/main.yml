@@ -132,7 +132,3 @@
     state: enabled
   tags:
     - ufw
-#
-# - name: Reboot hosts
-#   reboot:
-#     reboot_timeout: 600

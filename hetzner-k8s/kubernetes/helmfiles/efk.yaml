@@ -12,7 +12,6 @@ releases:
   namespace: logging
   labels:
     app: elasticsearch
-    stack: efk
   chart: elastic/elasticsearch
   version: 7.3.0
   values:
@@ -37,7 +36,6 @@ releases:
   namespace: logging
   labels:
     app: fluent-bit
-    stack: efk
   chart: stable/fluent-bit
   version: 2.4.4
   values:
@@ -68,7 +66,6 @@ releases:
   namespace: logging
   labels:
     app: kibana-ingress-auth
-    stack: efk
   chart: incubator/raw
   values:
   - resources:
@@ -78,7 +75,7 @@ releases:
         name: kibana-ingress-auth
       type: Opaque
       stringData:
-        auth: "{{ requiredEnv "KIBANA_AUTH" }}"
+        auth: {{ requiredEnv "KIBANA_AUTH" }}
 
 - name: kibana
   installed: true

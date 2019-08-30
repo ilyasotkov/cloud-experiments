@@ -23,7 +23,15 @@ def ansible_inventory_base():
             }
         },
         'all': {
-            'children': ['ungrouped', 'k8s-cluster', 'kube-master', 'kube-node', 'host-security'],
+            'children': [
+                'ungrouped',
+                'host-security',
+                'etcd',
+                'k8s-cluster',
+                'kube-master',
+                'kube-node',
+                'calico-rr'
+            ],
             'hosts': [],
             'vars': {
                 'cluster_name': 'k8s-{{ env }}.flexp.live'
@@ -31,10 +39,13 @@ def ansible_inventory_base():
         },
         'ungrouped': {
             'children': [],
-            'hosts': ['localhost']
+            'hosts': ['localhost'],
+            'vars': {}
         },
         'k8s-cluster': {
-            'children': ['kube-master', 'kube-node', 'etcd']
+            'children': ['kube-master', 'kube-node', 'calico-rr'],
+            'hosts': [],
+            'vars': {}
         },
         'host-security': {
             'hosts': [],
@@ -49,6 +60,10 @@ def ansible_inventory_base():
             'vars': {}
         },
         'etcd': {
+            'hosts': [],
+            'vars': {}
+        },
+        'calico-rr': {
             'hosts': [],
             'vars': {}
         }
@@ -87,8 +102,8 @@ def generate_ansible_inventory(terraform_output, ansible_inventory_base):
                 'access_ip': node_private_ips[index]
             }
             if inventory_hostname.startswith('master'):
-                ansible_inventory['kube-master']['hosts'].append(inventory_hostname)
                 ansible_inventory['kube-node']['hosts'].append(inventory_hostname)
+                ansible_inventory['kube-master']['hosts'].append(inventory_hostname)
                 ansible_inventory['etcd']['hosts'].append(inventory_hostname)
                 ansible_inventory['all']['hosts'].append(inventory_hostname)
             else:

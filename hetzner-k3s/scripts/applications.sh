@@ -13,11 +13,12 @@ cd -
 
 export KUBECONFIG="$(pwd)/kubeconfigs/$env.yaml"
 
-flags="--quiet --state-values-set masterIpAddress=$master_ip,applicationDomainZone=$application_domain_zone"
+flags="--state-values-set masterIpAddress=$master_ip,applicationDomainZone=$application_domain_zone"
 helmfile_selector=${2:-"all"}
+action=${3:-"sync"}
 
 if [ $helmfile_selector == "all" ]; then
-    helmfile $flags --file ./kubernetes/helmfile.yaml sync --concurrency=1
+    helmfile $flags --file ./kubernetes/helmfile.yaml $action --concurrency=1
 else
-    helmfile $flags --file ./kubernetes/helmfile.yaml --selector $helmfile_selector sync --concurrency=1
+    helmfile $flags --file ./kubernetes/helmfile.yaml --selector $helmfile_selector $action --concurrency=1
 fi

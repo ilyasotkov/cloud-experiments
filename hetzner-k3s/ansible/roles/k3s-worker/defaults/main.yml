@@ -1,4 +1,4 @@
 systemd_dir: /etc/systemd/system
-k3s_version: v0.7.0
+k3s_version: v0.8.1
 flannel_iface: ens10
 node_ip: "{{ ansible_ens10.ipv4.address }}"

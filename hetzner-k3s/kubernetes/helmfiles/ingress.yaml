@@ -28,6 +28,8 @@ releases:
         enabled: true
       metrics:
         enabled: true
+      podAnnotations:
+        fluentbit.io/parser: k8s-nginx-ingress
       config:
         server-tokens: "false"
       resources:

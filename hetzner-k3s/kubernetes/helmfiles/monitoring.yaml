@@ -16,7 +16,11 @@ releases:
   hooks:
   - events: ["presync"]
     command: "k3s"
-    args: ["kubectl", "apply", "-f", "https://raw.githubusercontent.com/kubernetes/dashboard/v2.0.0-beta3/aio/deploy/recommended.yaml"]
+    args:
+    - kubectl
+    - apply
+    - -f
+    - https://raw.githubusercontent.com/kubernetes/dashboard/v2.0.0-beta3/aio/deploy/recommended.yaml
   values:
   - resources:
     - apiVersion: v1

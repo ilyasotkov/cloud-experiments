@@ -1,0 +1,3 @@
+- import_playbook: ./wait-for-nodes.yml
+- import_playbook: ./host-security.yml
+- import_playbook: /kubespray/upgrade-cluster.yml

@@ -1,0 +1,18 @@
+helmDefaults:
+  wait: true
+  force: true
+  recreatePods: false
+  tillerless: true
+  tillerNamespace: kube-system
+
+releases:
+
+- name: hcloud-csi
+  installed: true
+  namespace: kube-system
+  labels:
+    app: hcloud-csi
+  chart: ../charts/hcloud-csi
+  values:
+  - hcloudToken:
+      token: {{ requiredEnv "HCLOUD_TOKEN" }}

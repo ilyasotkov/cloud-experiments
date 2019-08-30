@@ -1,0 +1,14 @@
+ansible_python_interpreter: /usr/bin/python3
+python_version: 3
+ansible_ssh_private_key_file: /project/.ssh/id_rsa_{{ env }}
+ansible_user: admin
+ansible_become: true
+
+fetch_kubeconfig_path: /project/kubeconfigs/{{ env }}.yaml
+kube_api_allowed_sources: 196.196.203.164/32
+
+etcd_data_dir: /var/lib/etcd
+bootstrap_os: ubuntu
+bin_dir: /usr/local/bin
+loadbalancer_apiserver_port: 6443
+loadbalancer_apiserver_healthcheck_port: 8081

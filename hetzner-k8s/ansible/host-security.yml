@@ -1,0 +1,8 @@
+- name: Apply security settings to hosts
+  hosts: k8s-cluster
+  roles:
+    - role: host-security
+  # post_tasks:
+  # - name: Reboot hosts
+  #   reboot:
+  #     reboot_timeout: 600

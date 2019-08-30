@@ -1,0 +1,10 @@
+**/.DS_Store
+.terraform/
+.terraformrc
+.ssh/
+__pycache__
+kubeconfigs/*
+!kubeconfigs/.keep
+.environment
+ansible/credentials/**
+!ansible/credentials/.keep

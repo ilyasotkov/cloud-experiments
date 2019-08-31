@@ -1,0 +1,66 @@
+helmDefaults:
+  wait: true
+  force: true
+  recreatePods: false
+  tillerless: true
+  tillerNamespace: kube-system
+
+releases:
+
+- name: istio-init
+  installed: true
+  namespace: istio-system
+  labels:
+    group: istio
+    app: istio-init
+  chart: istio.io/istio-init
+  values: []
+  hooks:
+  - events: ["presync"]
+    command: "sleep"
+    args: ["30"]
+
+- name: istio
+  installed: true
+  namespace: istio-system
+  labels:
+    group: istio
+    app: istio
+  chart: istio.io/istio
+  values:
+  - gateways:
+      istio-ingressgateway:
+        ports:
+        - port: 80
+          targetPort: 80
+          name: http2
+        - port: 443
+          name: https
+  hooks:
+  # Install Knative
+  - events: ["postsync"]
+    command: "kubectl"
+    args:
+    - apply
+    - --selector
+    - knative.dev/crd-install=true
+    - --filename
+    - https://github.com/knative/serving/releases/download/v0.8.0/serving.yaml
+    - --filename
+    - https://github.com/knative/eventing/releases/download/v0.8.0/release.yaml
+    - --filename
+    - https://github.com/knative/serving/releases/download/v0.8.0/monitoring.yaml
+  - events: ["postsync"]
+    command: "sleep"
+    args:
+    - "15"
+  - events: ["postsync"]
+    command: "kubectl"
+    args:
+    - apply
+    - --filename
+    - https://github.com/knative/serving/releases/download/v0.8.0/serving.yaml
+    - --filename
+    - https://github.com/knative/eventing/releases/download/v0.8.0/release.yaml
+    - --filename
+    - https://github.com/knative/serving/releases/download/v0.8.0/monitoring.yaml

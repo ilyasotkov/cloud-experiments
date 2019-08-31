@@ -9,7 +9,7 @@ releases:
 
 - name: hcloud-csi
   installed: true
-  namespace: kube-system
+  namespace: hcloud-csi
   labels:
     app: hcloud-csi
   chart: ../charts/hcloud-csi

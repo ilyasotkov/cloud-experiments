@@ -5,9 +5,10 @@ cd $(dirname $0)/..
 source ./scripts/includes.sh
 setup $@
 
-./scripts/applications.sh dev all destroy
+./scripts/applications.sh dev app!=hcloud-csi destroy
+kubectl delete --all pv
 sleep 60
-kubectl -n logging delete pvc elasticsearch-master-elasticsearch-master-0
+./scripts/applications.sh dev all destroy
 
 cd ./terraform
 terraform_init $env

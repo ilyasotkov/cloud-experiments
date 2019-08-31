@@ -23,4 +23,4 @@ releases:
       - name: default
         protocol: layer2
         addresses:
-        - {{ .Values.masterIpAddress }}/32
+        - "{{ .Values.masterIpAddress }}/32"

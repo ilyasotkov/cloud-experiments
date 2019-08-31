@@ -53,16 +53,18 @@ releases:
   - rbac:
       create: true
     interval: 1m
-    policy: sync
+    policy: upsert-only
     sources:
     - ingress
+    extraArgs:
+      log-format: json
     provider: cloudflare
     cloudflare:
       email: {{ requiredEnv "CLOUDFLARE_EMAIL" }}
       apiKey: {{ requiredEnv "CLOUDFLARE_TOKEN" }}
       proxied: false
     domainFilters:
-    - flexp.live
+    - {{ .Values.applicationDomainZone }}
 
 - name: cloudflare-api-key
   installed: true
@@ -85,15 +87,14 @@ releases:
   namespace: cert-manager
   hooks:
   - events: ["presync"]
-    command: "k3s"
+    command: kubectl
     args:
-    - kubectl
     - apply
     - --validate=true
     - --filename=https://raw.githubusercontent.com/jetstack/cert-manager/release-0.9/deploy/manifests/00-crds.yaml
   - events: ["presync"]
-    command: "k3s"
-    args: ["kubectl", "label", "namespace", "cert-manager", "certmanager.k8s.io/disable-validation=true", "--overwrite"]
+    command: "kubectl"
+    args: ["label", "namespace", "cert-manager", "certmanager.k8s.io/disable-validation=true", "--overwrite"]
   labels:
     app: cert-manager
   chart: jetstack/cert-manager

@@ -2,7 +2,7 @@ FROM alpine:3.10
 
 WORKDIR /project
 
-ARG ANSIBLE_VERSION=2.8.1
+ARG ANSIBLE_VERSION=2.8.4
 RUN apk --update add \
                 sudo \
                 python3 \
@@ -33,21 +33,18 @@ RUN apk --update add \
         && mkdir -p /etc/ansible \
         && echo localhost > /etc/ansible/hosts
 
-ARG TERRAFORM_VERSION=0.12.6
+ARG TERRAFORM_VERSION=0.12.7
 RUN curl -o ./terraform.zip \
         https://releases.hashicorp.com/terraform/${TERRAFORM_VERSION}/terraform_${TERRAFORM_VERSION}_linux_amd64.zip \
         && unzip terraform.zip \
         && mv terraform /usr/bin \
         && rm -rf terraform.zip
 
-ARG K3S_VERSION=0.7.0
-RUN curl -L -o ./k3s \
-        https://github.com/rancher/k3s/releases/download/v${K3S_VERSION}/k3s \
-        && chmod +x ./k3s \
-        && mv k3s /usr/bin \
-        && ln -f /usr/bin/k3s /usr/bin/kubectl \
-        && ln -f /usr/bin/k3s /usr/bin/crictl \
-        && ln -f /usr/bin/k3s /usr/bin/ctr
+ARG KUBECTL_VERSION=1.14.6
+RUN curl -L -o kubectl \
+        https://storage.googleapis.com/kubernetes-release/release/v${KUBECTL_VERSION}/bin/linux/amd64/kubectl \
+        && chmod 0700 kubectl \
+        && mv kubectl /usr/bin
 
 ARG HETZNER_CLI_VERSION=1.13.0
 RUN curl -L -o hcloud.tar.gz \
@@ -65,7 +62,7 @@ RUN cd /terraform-plugins \
         && cd \
         && rm -rf /terraform-plugins
 
-ARG HELM_VERSION=2.14.2
+ARG HELM_VERSION=2.14.3
 RUN curl -L -o helm.tar.gz \
         https://get.helm.sh/helm-v${HELM_VERSION}-linux-amd64.tar.gz \
         && tar -xvzf helm.tar.gz \
@@ -77,7 +74,7 @@ RUN curl -L -o helm.tar.gz \
         && helm plugin install https://github.com/rimusz/helm-tiller --version v0.8.3 \
         && helm tiller install
 
-ARG HELMFILE_VERSION=0.80.2
+ARG HELMFILE_VERSION=0.81.3
 RUN curl -L -o helmfile \
         https://github.com/roboll/helmfile/releases/download/v${HELMFILE_VERSION}/helmfile_linux_amd64 \
         && chmod 0700 helmfile \

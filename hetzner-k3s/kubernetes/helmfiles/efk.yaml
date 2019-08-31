@@ -18,14 +18,14 @@ releases:
   values:
   - replicas: 1
     antiAffinity: soft
-    esJavaOpts: -Xmx128m -Xms128m
+    esJavaOpts: -Xmx512m -Xms512m
     resources:
       requests:
         cpu: 100m
-        memory: 512Mi
+        memory: 1024Mi
       limits:
         cpu: 1000m
-        memory: 512Mi
+        memory: 1024Mi
     volumeClaimTemplate:
       accessModes: ["ReadWriteOnce"]
       storageClassName: hcloud-volumes
@@ -49,7 +49,7 @@ releases:
     trackOffsets: false
     filter:
       mergeJSONLog: true
-      mergeLogKey: log_processed
+      mergeLogKey: data
     input:
       tail:
         memBufLimit: 5MB
@@ -66,17 +66,6 @@ releases:
       es:
         host: elasticsearch-master
         port: 9200
-        # index: kubernetes_cluster
-        # type: flb_type
-        # logstash_prefix: kubernetes_cluster
-        # replace_dots: "On"
-        # time_key: "@timestamp"
-        # http_user:
-        # http_passwd:
-        # tls: "off"
-        # tls_verify: "on"
-        # tls_ca: ""
-        # tls_debug: 1
 
 - name: kibana-ingress-auth
   installed: true

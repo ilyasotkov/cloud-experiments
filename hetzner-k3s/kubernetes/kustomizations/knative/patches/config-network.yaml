@@ -1,0 +1,6 @@
+- op: add
+  path: /data/autoTLS
+  value: Enabled
+- op: add
+  path: /data/httpProtocol
+  value: Redirected

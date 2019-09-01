@@ -116,6 +116,7 @@ releases:
   installed: true
   namespace: cert-manager
   labels:
+    group: ingress
     app: cert-manager-issuers
   chart: incubator/raw
   values:
@@ -130,13 +131,15 @@ releases:
           server: https://acme-staging-v02.api.letsencrypt.org/directory
           privateKeySecretRef:
             name: letsencrypt-staging-private-key
+          dns01:
+            providers:
+            - name: cloudflare
+              cloudflare:
+                email: {{ requiredEnv "CLOUDFLARE_EMAIL" }}
+                apiKeySecretRef:
+                  name: cloudflare-apikey
+                  key: apikey
           solvers:
-          - selector:
-              matchLabels:
-                use-http01-solver: "true"
-            http01:
-              ingress:
-                class: nginx
           - dns01:
               cloudflare:
                 email: {{ requiredEnv "CLOUDFLARE_EMAIL" }}

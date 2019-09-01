@@ -1,0 +1,10 @@
+- op: add
+  path: /data/issuerRef
+  value: |
+      kind: ClusterIssuer
+      name: letsencrypt-staging
+- op: add
+  path: /data/solverConfig
+  value: |
+    dns01:
+      provider: cloudflare

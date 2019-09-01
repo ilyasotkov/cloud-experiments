@@ -18,11 +18,11 @@ helmfiles:
   values:
   - masterIpAddress: {{ .Values.masterIpAddress }}
 
-- path: ./helmfiles/istio.yaml
+- path: ./helmfiles/ingress.yaml
+  values:
+  - applicationDomainZone: {{ .Values.applicationDomainZone }}
 
-# - path: ./helmfiles/ingress.yaml
-#   values:
-#   - applicationDomainZone: {{ .Values.applicationDomainZone }}
+- path: ./helmfiles/knative.yaml
 #
 # # Install logging stack
 # - path: ./helmfiles/efk.yaml

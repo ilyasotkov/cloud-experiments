@@ -8,9 +8,10 @@ helmDefaults:
 releases:
 
 - name: nginx-ingress
-  installed: true
+  installed: false
   namespace: kube-system
   labels:
+    group: ingress
     app: nginx-ingress
   chart: stable/nginx-ingress
   version: 1.12.1
@@ -46,6 +47,7 @@ releases:
   installed: true
   namespace: kube-system
   labels:
+    group: ingress
     app: external-dns
   chart: stable/external-dns
   version: 2.4.2
@@ -55,6 +57,8 @@ releases:
     interval: 1m
     policy: upsert-only
     sources:
+    - service
+    - istio-gateway
     - ingress
     extraArgs:
       log-format: json
@@ -70,6 +74,7 @@ releases:
   installed: true
   namespace: cert-manager
   labels:
+    group: ingress
     app: cloudflare-api-key
   chart: incubator/raw
   values:
@@ -85,6 +90,17 @@ releases:
 - name: cert-manager
   installed: true
   namespace: cert-manager
+  labels:
+    group: ingress
+    app: cert-manager
+  chart: jetstack/cert-manager
+  version: v0.9.0
+  values:
+  - ingressShim:
+      defaultIssuerName: letsencrypt-staging
+      defaultIssuerKind: ClusterIssuer
+      defaultACMEChallengeType: dns01
+      defaultACMEDNS01ChallengeProvider: cloudflare
   hooks:
   - events: ["presync"]
     command: kubectl
@@ -95,16 +111,6 @@ releases:
   - events: ["presync"]
     command: "kubectl"
     args: ["label", "namespace", "cert-manager", "certmanager.k8s.io/disable-validation=true", "--overwrite"]
-  labels:
-    app: cert-manager
-  chart: jetstack/cert-manager
-  version: v0.9.0
-  values:
-  - ingressShim:
-      defaultIssuerName: letsencrypt-staging
-      defaultIssuerKind: ClusterIssuer
-      defaultACMEChallengeType: dns01
-      defaultACMEDNS01ChallengeProvider: cloudflare
 
 - name: cert-manager-issuers
   installed: true

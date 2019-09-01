@@ -12,9 +12,18 @@ metadata:
   namespace: knative-functions
 spec:
   template:
+    metadata:
+      annotations:
+        autoscaling.knative.dev/minScale: "1"
+        autoscaling.knative.dev/maxScale: "10"
     spec:
       containers:
-      - image: gcr.io/knative-samples/helloworld-go # The URL to the image of the app
+      - image: gcr.io/knative-samples/helloworld-go
         env:
-        - name: TARGET # The environment variable printed out by the sample app
-          value: "Go Sample 1 September 2019"
+        - name: TARGET
+          value: "Go Woof"
+  traffic:
+  - latestRevision: true
+    percent: 100
+  # - revisionName: helloworld-go-zm776
+  #   percent: 50

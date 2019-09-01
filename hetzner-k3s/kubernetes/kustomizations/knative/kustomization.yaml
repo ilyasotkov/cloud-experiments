@@ -1,9 +1,10 @@
+apiVersion: kustomize.config.k8s.io/v1beta1
+kind: Kustomization
 resources:
 - ./serving.yaml
 - ./release.yaml
 - ./monitoring.yaml
 - ./serving-cert-manager.yaml
-
 patchesJson6902:
 - target:
     version: v1
@@ -11,13 +12,6 @@ patchesJson6902:
     name: config-domain
     namespace: knative-serving
   path: ./patches/config-domain.yaml
-- target:
-    group: networking.istio.io
-    version: v1alpha3
-    kind: Gateway
-    name: knative-ingress-gateway
-    namespace: knative-serving
-  path: ./patches/knative-ingress-gateway.yaml
 - target:
     version: v1
     kind: ConfigMap
@@ -30,3 +24,33 @@ patchesJson6902:
     name: config-network
     namespace: knative-serving
   path: ./patches/config-network.yaml
+- target:
+    version: v1
+    kind: ConfigMap
+    name: fluentd-ds-config
+    namespace: knative-monitoring
+  path: ./patches/fluentd-ds-config.yaml
+- target:
+    version: v1
+    kind: Service
+    name: kibana-logging
+  path: ./patches/svc-type-cluster-ip.yaml
+- target:
+    version: v1
+    kind: Service
+    name: prometheus-system-np
+    namespace: knative-monitoring
+  path: ./patches/svc-type-cluster-ip.yaml
+- target:
+    version: v1
+    kind: Service
+    name: grafana
+    namespace: knative-monitoring
+  path: ./patches/svc-type-cluster-ip.yaml
+- target:
+    group: apps
+    version: v1
+    kind: Deployment
+    name: kibana-logging
+    namespace: knative-monitoring
+  path: ./patches/kibana-deployment.yaml

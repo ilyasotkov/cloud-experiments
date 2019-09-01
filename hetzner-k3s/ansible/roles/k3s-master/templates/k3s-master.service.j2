@@ -10,7 +10,8 @@ ExecStart=/usr/local/bin/k3s server \
         --node-ip {{ master_ip }} \
         --flannel-iface {{ flannel_iface }} \
         --no-deploy traefik \
-        --no-deploy servicelb
+        --no-deploy servicelb \
+        --node-label beta.kubernetes.io/fluentd-ds-ready="true"
 KillMode=process
 Delegate=yes
 LimitNOFILE=infinity

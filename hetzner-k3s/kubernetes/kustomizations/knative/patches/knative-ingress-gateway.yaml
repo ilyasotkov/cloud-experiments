@@ -1,6 +1,0 @@
-- op: replace
-  path: /spec/servers/0/hosts/0
-  value: "*.knative-functions.flexp.live"
-- op: replace
-  path: /spec/servers/1/hosts/0
-  value: "*.knative-functions.flexp.live"

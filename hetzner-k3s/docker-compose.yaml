@@ -1,5 +1,12 @@
 version: "3.7"
 
+x-kubectl-proxy-service: &kubectl-proxy-service
+  image: bitnami/kubectl:1.14.3
+  environment:
+  - KUBECONFIG=/project/kubeconfigs/$ENV.yaml
+  volumes:
+  - .:/project
+
 services:
   controller:
     build: .
@@ -10,11 +17,31 @@ services:
     - ./terraform/.terraformrc:/root/.terraformrc
 
   dash:
-    image: bitnami/kubectl:1.14.3
-    environment:
-    - KUBECONFIG=/project/kubeconfigs/$ENV.yaml
-    volumes:
-    - .:/project
+    <<: *kubectl-proxy-service
     ports:
     - 9443:9443
     command: -n kubernetes-dashboard port-forward svc/kubernetes-dashboard 9443:443 --address=0.0.0.0
+
+  kibana:
+    <<: *kubectl-proxy-service
+    ports:
+    - 5601:5601
+    command: -n knative-monitoring port-forward svc/kibana-logging 5601:5601 --address=0.0.0.0
+
+  zipkin:
+    <<: *kubectl-proxy-service
+    ports:
+    - 9411:9411
+    command: -n istio-system port-forward svc/zipkin 9411:9411 --address=0.0.0.0
+
+  grafana:
+    <<: *kubectl-proxy-service
+    ports:
+    - 30802:30802
+    command: -n knative-monitoring port-forward svc/grafana 30802:30802 --address=0.0.0.0
+
+  prometheus:
+    <<: *kubectl-proxy-service
+    ports:
+    - 8080:8080
+    command: -n knative-monitoring port-forward svc/prometheus-system-np 8080:8080 --address=0.0.0.0

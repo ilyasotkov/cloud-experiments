@@ -1,0 +1,20 @@
+apiVersion: v1
+kind: Namespace
+metadata:
+  labels:
+    istio-injection: enabled
+  name: knative-functions
+---
+apiVersion: serving.knative.dev/v1alpha1
+kind: Service
+metadata:
+  name: helloworld-go
+  namespace: knative-functions
+spec:
+  template:
+    spec:
+      containers:
+      - image: gcr.io/knative-samples/helloworld-go # The URL to the image of the app
+        env:
+        - name: TARGET # The environment variable printed out by the sample app
+          value: "Go Sample 1 September 2019"

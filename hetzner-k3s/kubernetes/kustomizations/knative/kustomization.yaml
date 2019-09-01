@@ -1,0 +1,18 @@
+resources:
+- ./serving.yaml
+- ./release.yaml
+- ./monitoring.yaml
+patchesJson6902:
+- target:
+    version: v1
+    kind: ConfigMap
+    name: config-domain
+    namespace: knative-serving
+  path: ./patches/config-domain.yaml
+- target:
+    group: networking.istio.io
+    version: v1alpha3
+    kind: Gateway
+    name: knative-ingress-gateway
+    namespace: knative-serving
+  path: ./patches/knative-ingress-gateway.yaml

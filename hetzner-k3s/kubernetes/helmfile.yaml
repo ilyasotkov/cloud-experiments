@@ -22,7 +22,7 @@ helmfiles:
   values:
   - applicationDomainZone: {{ .Values.applicationDomainZone }}
 
-- path: ./helmfiles/knative.yaml
+- path: ./helmfiles/istio-knative.yaml
 #
 # # Install logging stack
 # - path: ./helmfiles/efk.yaml

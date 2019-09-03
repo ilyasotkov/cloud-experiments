@@ -40,7 +40,7 @@ RUN curl -o ./terraform.zip \
         && mv terraform /usr/bin \
         && rm -rf terraform.zip
 
-ARG KUBECTL_VERSION=1.14.6
+ARG KUBECTL_VERSION=1.15.3
 RUN curl -L -o kubectl \
         https://storage.googleapis.com/kubernetes-release/release/v${KUBECTL_VERSION}/bin/linux/amd64/kubectl \
         && chmod 0700 kubectl \

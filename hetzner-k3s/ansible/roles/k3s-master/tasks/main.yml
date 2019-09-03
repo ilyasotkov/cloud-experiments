@@ -86,7 +86,7 @@
   connection: local
   replace:
     path: "{{ fetch_kubeconfig_path }}"
-    regexp: 'https://localhost:6443'
+    regexp: 'https://127.0.0.1:6443'
     replace: "https://{{ hostvars[groups['masters'][0]].ansible_eth0.ipv4.address }}:6443"
 
 - name: Allow communication to Kubernetes master

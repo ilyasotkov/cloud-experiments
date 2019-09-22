@@ -46,3 +46,9 @@ An example custom application used for containerization
 ⚠️ Needs work
 
 [rancher/k3s](https://github.com/rancher/k3s) cluster on Linode with Terraform and Ansible
+
+### oracle-k3s
+
+⚠️ Needs work, not functional yet
+
+[rancher/k3s](https://github.com/rancher/k3s) cluster on Oracle Cloud's **Always Free** Infrastructure

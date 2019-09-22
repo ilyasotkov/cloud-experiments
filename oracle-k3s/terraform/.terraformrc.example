@@ -1,0 +1,3 @@
+credentials "app.terraform.io" {
+  token = "PASTE_YOUR_TERRAFORM_TOKEN_HERE"
+}

@@ -1,0 +1,19 @@
+[Unit]
+Description=Lightweight Kubernetes (Worker Node)
+Documentation=https://k3s.io
+After=network-online.target
+[Service]
+ExecStart=/usr/local/bin/k3s agent \
+        --server https://{{ master_ip }}:6443 \
+        --token {{ hostvars[groups['masters'][0]]['token'] }} \
+        --node-ip {{ node_ip }} \
+        --flannel-iface {{ flannel_iface }}
+KillMode=process
+Delegate=yes
+LimitNOFILE=infinity
+LimitNPROC=infinity
+LimitCORE=infinity
+TasksMax=infinity
+Restart=always
+[Install]
+WantedBy=multi-user.target

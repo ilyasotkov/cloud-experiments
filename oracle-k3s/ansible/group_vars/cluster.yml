@@ -1,0 +1,32 @@
+#k3s_version: v0.8.0
+#kube_api_allowed_sources: 0.0.0.0/0
+systemd_dir: /etc/systemd/system
+master_ip: "{{ hostvars[groups['masters'][0]].ansible_ens3.ipv4.address }}"
+
+host_security_sysctl_settings_user:
+  "net.ipv4.ip_forward": 1
+  "net.ipv6.conf.default.forwarding": 1
+  "net.ipv6.conf.all.forwarding": 1
+
+host_security_sshd_settings:
+  "^PasswordAuthentication": "PasswordAuthentication no"
+  "^PermitRootLogin": "PermitRootLogin no"
+  "^PermitTunnel": "PermitTunnel no"
+  "^Port ": "Port 22"
+
+host_security_ufw_rules:
+  - rule: allow
+    to_port: "22"
+    protocol: tcp
+
+host_security_ufw_allow_networks:
+  - 10.0.0.0/8
+
+host_security_ufw_defaults_user:
+  "^DEFAULT_FORWARD_POLICY": 'DEFAULT_FORWARD_POLICY="ACCEPT"'
+
+host_security_ufw_logging: "on"
+
+host_security_sshguard_whitelist:
+  - 127.0.0.0/8
+  - "::1/128"

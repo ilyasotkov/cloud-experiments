@@ -3,13 +3,18 @@ variable "node_count" {
   default = 3
 }
 
+variable "server_type" {
+  type    = "string"
+  default = "cx31"
+}
+
 resource "hcloud_server" "nodes" {
   count = var.node_count
 
   name        = count.index == 0 ? "master" : format("worker-%d", count.index)
   image       = "ubuntu-18.04"
   location    = "hel1"
-  server_type = "cx21"
+  server_type = var.server_type
   ssh_keys    = [hcloud_ssh_key.default.id]
 
   user_data = <<USERDATA

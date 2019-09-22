@@ -10,6 +10,9 @@ helmfiles:
 # # Enable basic PVC functionality
 # - path: ./helmfiles/local-path-provisioner.yaml
 
+# Install monitoring stack
+- path: ./helmfiles/monitoring.yaml
+
 # Enable LoadBalancer type of service for ingress controller
 - path: ./helmfiles/metallb.yaml
   values:
@@ -19,14 +22,13 @@ helmfiles:
   values:
   - applicationDomainZone: {{ .Values.applicationDomainZone }}
 
-# Install monitoring stack
-- path: ./helmfiles/monitoring.yaml
-
-# Install logging stack
-- path: ./helmfiles/efk.yaml
-  values:
-  - applicationDomainZone: {{ .Values.applicationDomainZone }}
-
-- path: ./helmfiles/forms-app.yaml
-  values:
-  - applicationDomainZone: {{ .Values.applicationDomainZone }}
+- path: ./helmfiles/istio-knative.yaml
+#
+# # Install logging stack
+# - path: ./helmfiles/efk.yaml
+#   values:
+#   - applicationDomainZone: {{ .Values.applicationDomainZone }}
+#
+# - path: ./helmfiles/forms-app.yaml
+#   values:
+#   - applicationDomainZone: {{ .Values.applicationDomainZone }}

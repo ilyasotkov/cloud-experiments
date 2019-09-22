@@ -3,9 +3,11 @@ repositories:
   url: https://kubernetes-charts.storage.googleapis.com
 - name: incubator
   url: https://kubernetes-charts-incubator.storage.googleapis.com
-- name: exekube
-  url: https://exekube.github.io/charts
+# - name: exekube
+#   url: https://exekube.github.io/charts
 - name: jetstack
   url: https://charts.jetstack.io
-- name: elastic
-  url: https://helm.elastic.co
+# - name: elastic
+#   url: https://helm.elastic.co
+- name: istio.io
+  url: https://storage.googleapis.com/istio-release/releases/1.2.5/charts/

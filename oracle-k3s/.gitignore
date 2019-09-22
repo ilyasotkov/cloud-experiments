@@ -1,0 +1,9 @@
+**/.DS_Store
+.terraform/
+.terraformrc
+.ssh/
+__pycache__
+kubeconfigs/*
+!kubeconfigs/.keep
+.environment
+.oci

@@ -1,0 +1,26 @@
+helmDefaults:
+  wait: true
+  force: true
+  recreatePods: false
+  tillerless: true
+  tillerNamespace: kube-system
+
+releases:
+
+- name: metallb
+  installed: true
+  namespace: kube-system
+  labels:
+    app: metallb
+  chart: stable/metallb
+  version: 0.10.0
+  values:
+  - speaker:
+      nodeSelector:
+        kubernetes.io/hostname: master
+    configInline:
+      address-pools:
+      - name: default
+        protocol: layer2
+        addresses:
+        - "{{ .Values.masterIpAddress }}/32"

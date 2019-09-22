@@ -1,0 +1,24 @@
+- name: Ensure {{ local_path }}/ssh_pubkeys directory exists
+  file:
+    path: "{{ local_path }}/ssh_pubkeys"
+    state: directory
+
+- name: Ensure {{ local_path }}/.ssh directory exists
+  file:
+    path: "{{ local_path }}/.ssh"
+    state: directory
+
+- name: Create ssh key pair if it doesn't yet exist
+  openssh_keypair:
+    comment: "{{ controller_ssh_key_comment }}"
+    state: present
+    path: "{{ local_path }}/.ssh/{{ bootstrap_ssh_key_name }}"
+
+- name: Stat {{ bootstrap_ssh_key_name }}.pub
+  stat:
+    path: "{{ local_path }}/.ssh/{{ bootstrap_ssh_key_name }}.pub"
+  register: ssh_pub_not_moved
+
+- name: Move {{ bootstrap_ssh_key_name }}.pub to ssh_pubkeys if not yet moved
+  command: mv {{ local_path }}/.ssh/{{ bootstrap_ssh_key_name }}.pub {{ local_path }}/ssh_pubkeys/{{ bootstrap_ssh_key_name }}.pub
+  when: ssh_pub_not_moved.stat.exists

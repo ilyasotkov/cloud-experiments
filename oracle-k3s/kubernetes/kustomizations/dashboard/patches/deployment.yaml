@@ -1,0 +1,6 @@
+- op: add
+  path: /spec/template/spec/containers/0/args/2
+  value: --system-banner="Hello, world!"
+- op: add
+  path: /spec/template/spec/containers/0/args/3
+  value: --api-log-level=NONE

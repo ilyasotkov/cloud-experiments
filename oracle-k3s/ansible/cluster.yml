@@ -1,0 +1,36 @@
+- name: Wait for hosts to become available after creation
+  hosts: cluster
+  gather_facts: no
+  tasks:
+    - name: Wait for hosts to become available via SSH
+      wait_for_connection:
+        timeout: 120
+    - name: Wait for automatic system updates to finish
+      raw: systemd-run --property="After=apt-daily.service apt-daily-upgrade.service" --wait /bin/true
+
+- name: Apply security settings to hosts
+  hosts: cluster
+  roles:
+    - role: host-security
+  tags:
+    - linux
+
+- name: Install k3s on master
+  hosts: masters
+  pre_tasks:
+  - name: Flush iptables
+    shell: iptables -F
+  roles:
+    - role: k3s-master
+  tags:
+    - k3s
+
+- name: Install k3s on workers
+  hosts: workers
+  pre_tasks:
+  - name: Flush iptables
+    shell: iptables -F
+  roles:
+    - role: k3s-worker
+  tags:
+    - k3s

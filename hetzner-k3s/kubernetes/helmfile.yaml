@@ -7,9 +7,6 @@ helmfiles:
 # Disabled due to https://github.com/hetznercloud/csi-driver/issues/46
 - path: ./helmfiles/hcloud.yaml
 
-# # Enable basic PVC functionality
-# - path: ./helmfiles/local-path-provisioner.yaml
-
 # Enable LoadBalancer type of service for ingress controller
 - path: ./helmfiles/metallb.yaml
   values:
@@ -26,6 +23,11 @@ helmfiles:
 - path: ./helmfiles/efk.yaml
   values:
   - applicationDomainZone: {{ .Values.applicationDomainZone }}
+
+
+###############################################################################
+# APPLICATIONS
+###############################################################################
 
 - path: ./helmfiles/forms-app.yaml
   values:

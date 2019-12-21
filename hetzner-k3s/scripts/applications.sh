@@ -17,6 +17,8 @@ flags="--state-values-set masterIpAddress=$master_ip,applicationDomainZone=$appl
 helmfile_selector=${2:-"all"}
 action=${3:-"sync"}
 
+helmfile $flags --file ./kubernetes/helmfile.yaml repos
+
 if [ $helmfile_selector == "all" ]; then
     helmfile $flags --file ./kubernetes/helmfile.yaml $action --concurrency=1
 else

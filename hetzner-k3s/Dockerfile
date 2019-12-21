@@ -33,14 +33,14 @@ RUN apk --update add \
         && mkdir -p /etc/ansible \
         && echo localhost > /etc/ansible/hosts
 
-ARG TERRAFORM_VERSION=0.12.9
+ARG TERRAFORM_VERSION=0.12.18
 RUN curl -o ./terraform.zip \
         https://releases.hashicorp.com/terraform/${TERRAFORM_VERSION}/terraform_${TERRAFORM_VERSION}_linux_amd64.zip \
         && unzip terraform.zip \
         && mv terraform /usr/bin \
         && rm -rf terraform.zip
 
-ARG KUBECTL_VERSION=1.15.4
+ARG KUBECTL_VERSION=1.16.3
 RUN curl -L -o kubectl \
         https://storage.googleapis.com/kubernetes-release/release/v${KUBECTL_VERSION}/bin/linux/amd64/kubectl \
         && chmod 0700 kubectl \
@@ -62,7 +62,7 @@ RUN cd /terraform-plugins \
         && cd \
         && rm -rf /terraform-plugins
 
-ARG HELM_VERSION=2.14.3
+ARG HELM_VERSION=2.16.0
 RUN curl -L -o helm.tar.gz \
         https://get.helm.sh/helm-v${HELM_VERSION}-linux-amd64.tar.gz \
         && tar -xvzf helm.tar.gz \
@@ -74,7 +74,8 @@ RUN curl -L -o helm.tar.gz \
         && helm plugin install https://github.com/rimusz/helm-tiller --version v0.8.3 \
         && helm tiller install
 
-ARG HELMFILE_VERSION=0.81.3
+
+ARG HELMFILE_VERSION=0.97.0
 RUN curl -L -o helmfile \
         https://github.com/roboll/helmfile/releases/download/v${HELMFILE_VERSION}/helmfile_linux_amd64 \
         && chmod 0700 helmfile \

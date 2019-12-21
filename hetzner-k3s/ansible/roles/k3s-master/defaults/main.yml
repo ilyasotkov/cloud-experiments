@@ -1,5 +1,5 @@
 systemd_dir: /etc/systemd/system
-k3s_version: v0.9.0-rc2
+k3s_version: v0.9.0
 flannel_iface: ens10
 node_ip: "{{ ansible_ens10.ipv4.address }}"
 kube_api_allowed_sources: 0.0.0.0/0

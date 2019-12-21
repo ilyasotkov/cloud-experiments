@@ -2,7 +2,7 @@ FROM alpine:3.10
 
 WORKDIR /project
 
-ARG ANSIBLE_VERSION=2.8.4
+ARG ANSIBLE_VERSION=2.8.5
 RUN apk --update add \
                 sudo \
                 python3 \
@@ -33,14 +33,14 @@ RUN apk --update add \
         && mkdir -p /etc/ansible \
         && echo localhost > /etc/ansible/hosts
 
-ARG TERRAFORM_VERSION=0.12.7
+ARG TERRAFORM_VERSION=0.12.9
 RUN curl -o ./terraform.zip \
         https://releases.hashicorp.com/terraform/${TERRAFORM_VERSION}/terraform_${TERRAFORM_VERSION}_linux_amd64.zip \
         && unzip terraform.zip \
         && mv terraform /usr/bin \
         && rm -rf terraform.zip
 
-ARG KUBECTL_VERSION=1.15.3
+ARG KUBECTL_VERSION=1.15.4
 RUN curl -L -o kubectl \
         https://storage.googleapis.com/kubernetes-release/release/v${KUBECTL_VERSION}/bin/linux/amd64/kubectl \
         && chmod 0700 kubectl \

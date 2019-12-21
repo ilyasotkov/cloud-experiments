@@ -26,7 +26,7 @@ USERDATA
 
 resource "hcloud_ssh_key" "default" {
   name       = "default"
-  public_key = "${file("${path.cwd}/../ssh_pubkeys/id_rsa_${var.env}.pub")}"
+  public_key = file("${path.cwd}/../ssh_pubkeys/id_rsa_${var.env}.pub")
 }
 
 resource "hcloud_server_network" "server_network" {

@@ -1,10 +1,13 @@
 helmfiles:
 
-# Update Helm repos
+###############################################################################
+# CLOUD PLATFORM
+###############################################################################
+
+# Helm repositories
 - path: ./helmfiles/_repositories.yaml
 
 # Hetzner Cloud integrations
-# Disabled due to https://github.com/hetznercloud/csi-driver/issues/46
 - path: ./helmfiles/hcloud.yaml
 
 # Enable LoadBalancer type of service for ingress controller
@@ -12,6 +15,7 @@ helmfiles:
   values:
   - masterIpAddress: {{ .Values.masterIpAddress }}
 
+# Install NGINX ingress controller, cert-manager, external-dns
 - path: ./helmfiles/ingress.yaml
   values:
   - applicationDomainZone: {{ .Values.applicationDomainZone }}

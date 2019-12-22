@@ -12,8 +12,7 @@ releases:
   namespace: default
   labels:
     app: forms-app
-  chart: exekube/nginx-react
-  version: 0.3.0
+  chart: ../nginx-react
   values:
   - replicaCount: 5
     image:
@@ -22,8 +21,6 @@ releases:
       pullPolicy: IfNotPresent
     serviceType: ClusterIP
     servicePort: 80
-    # podAnnotations:
-    #   fluentbit.io/parser: nginx
     ingress:
       enabled: true
       annotations:

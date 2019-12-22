@@ -17,7 +17,7 @@ releases:
   - hcloudToken:
       token: {{ requiredEnv "HCLOUD_TOKEN" }}
     hostPathVolumes:
-      kubeletDir: /var/lib/rancher/k3s/agent/kubelet
-      pluginDir: /var/lib/rancher/k3s/agent/kubelet/plugins/csi.hetzner.cloud
-      registrationDir: /var/lib/rancher/k3s/agent/kubelet/plugins_registry
+      kubeletDir: /var/lib/kubelet
+      pluginDir: /var/lib/kubelet/plugins/csi.hetzner.cloud
+      registrationDir: /var/lib/kubelet/plugins_registry
       deviceDir: /dev

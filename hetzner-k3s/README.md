@@ -1,5 +1,6 @@
 # k3s cluster on Hetzner Cloud
 
+
 ## Directory structure
 
 - `scripts`: automation scripts for invoking tasks
@@ -16,6 +17,9 @@
 
 ## Start an interactive development session
 
+```sh
+export ENV=dev
+```
 ```sh
 docker-compose build && docker-compose run --rm controller bash
 ```

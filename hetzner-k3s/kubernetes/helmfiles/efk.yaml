@@ -14,7 +14,7 @@ releases:
     group: efk
     app: elasticsearch
   chart: elastic/elasticsearch
-  version: 7.3.0
+  version: 7.5.1
   values:
   - replicas: 1
     antiAffinity: soft
@@ -40,7 +40,7 @@ releases:
     group: efk
     app: fluent-bit
   chart: stable/fluent-bit
-  version: 2.4.4
+  version: 2.8.4
   values:
   - metrics:
       enabled: true
@@ -91,7 +91,7 @@ releases:
     group: efk
     app: kibana
   chart: elastic/kibana
-  version: 7.3.0
+  version: 7.5.1
   values:
   - elasticsearchHosts: http://elasticsearch-master:9200
     ingress:

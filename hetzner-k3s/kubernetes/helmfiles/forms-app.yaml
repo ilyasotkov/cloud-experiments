@@ -12,7 +12,7 @@ releases:
   namespace: default
   labels:
     app: forms-app
-  chart: ../nginx-react
+  chart: ../charts/nginx-react
   values:
   - replicaCount: 5
     image:

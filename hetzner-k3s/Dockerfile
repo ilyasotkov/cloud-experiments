@@ -62,7 +62,7 @@ RUN cd /terraform-plugins \
         && cd \
         && rm -rf /terraform-plugins
 
-ARG HELM_VERSION=2.16.0
+ARG HELM_VERSION=2.16.1
 RUN curl -L -o helm.tar.gz \
         https://get.helm.sh/helm-v${HELM_VERSION}-linux-amd64.tar.gz \
         && tar -xvzf helm.tar.gz \

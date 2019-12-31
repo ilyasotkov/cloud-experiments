@@ -33,6 +33,6 @@ helmfiles:
 # APPLICATIONS
 ###############################################################################
 
-- path: ./helmfiles/forms-app.yaml
+- path: ./helmfiles/minio.yaml
   values:
   - applicationDomainZone: {{ .Values.applicationDomainZone }}

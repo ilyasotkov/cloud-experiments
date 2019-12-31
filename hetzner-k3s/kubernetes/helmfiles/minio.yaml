@@ -1,0 +1,38 @@
+helmDefaults:
+  wait: true
+  force: true
+  recreatePods: false
+  tillerless: true
+  tillerNamespace: kube-system
+
+releases:
+
+- name: minio
+  installed: true
+  namespace: storage
+  labels:
+    app: minio
+  chart: stable/minio
+  version: 4.0.3
+  values:
+  - fullnameOverride: minio
+    persistence:
+      storageClass: hcloud-volumes
+    defaultBucket:
+      enabled: true
+      name: default-bucket
+      ## Can be one of none|download|upload|public
+      policy: none
+      purge: true
+    ingress:
+      enabled: true
+      annotations:
+        kubernetes.io/ingress.class: nginx
+        kubernetes.io/tls-acme: "true"
+        nginx.ingress.kubernetes.io/force-ssl-redirect: "true"
+      hosts:
+      - s3.{{ .Values.applicationDomainZone }}
+      tls:
+      - secretName: s3-minio-tls
+        hosts:
+        - s3.{{ .Values.applicationDomainZone }}

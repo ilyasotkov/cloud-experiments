@@ -8,7 +8,7 @@ helmDefaults:
 releases:
 
 - name: forms-app
-  installed: true
+  installed: false
   namespace: default
   labels:
     app: forms-app

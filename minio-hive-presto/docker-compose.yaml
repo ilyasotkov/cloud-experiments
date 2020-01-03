@@ -9,13 +9,6 @@ services:
 
   metastore:
     build: ./metastore
-    environment:
-      AWS_ACCESS_KEY_ID: minio
-      AWS_SECRET_ACCESS_KEY: minio123
-    ports:
-    - 9083:9083
-    # extra_hosts:
-    #  - metastore:0.0.0.0
 
   webhcat:
     build: ./metastore
@@ -23,8 +16,6 @@ services:
     - 50111:50111
     environment:
       WEBHCAT_LOG_DIR: /opt/apache-hive-3.1.2-bin/log/
-      AWS_ACCESS_KEY_ID: minio
-      AWS_SECRET_ACCESS_KEY: minio123
     volumes:
     - ./tmp:/opt/apache-hive-3.1.2-bin/log/
     entrypoint: /opt/apache-hive-3.1.2-bin/hcatalog/sbin/webhcat_server.sh
@@ -46,7 +37,7 @@ services:
   mc:
     image: minio/mc
     entrypoint: /bin/sh
-  
+
   presto:
     build: ./presto
     ports:

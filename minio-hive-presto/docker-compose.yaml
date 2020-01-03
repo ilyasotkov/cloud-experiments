@@ -1,0 +1,53 @@
+version: "3.7"
+
+services:
+
+  db:
+    image: postgres
+    environment:
+      POSTGRES_DB: default
+
+  metastore:
+    build: ./metastore
+    environment:
+      AWS_ACCESS_KEY_ID: minio
+      AWS_SECRET_ACCESS_KEY: minio123
+    ports:
+    - 9083:9083
+    # extra_hosts:
+    #  - metastore:0.0.0.0
+
+  webhcat:
+    build: ./metastore
+    ports:
+    - 50111:50111
+    environment:
+      WEBHCAT_LOG_DIR: /opt/apache-hive-3.1.2-bin/log/
+      AWS_ACCESS_KEY_ID: minio
+      AWS_SECRET_ACCESS_KEY: minio123
+    volumes:
+    - ./tmp:/opt/apache-hive-3.1.2-bin/log/
+    entrypoint: /opt/apache-hive-3.1.2-bin/hcatalog/sbin/webhcat_server.sh
+    # entrypoint: /bin/sh
+    command:
+    - foreground
+
+  minio:
+    image: minio/minio:RELEASE.2019-12-30T05-45-39Z
+    ports:
+    - 9000:9000
+    environment:
+      MINIO_ACCESS_KEY: minio
+      MINIO_SECRET_KEY: minio123
+    command: server /minio-data
+    volumes:
+    - ./data:/minio-data
+
+  mc:
+    image: minio/mc
+    entrypoint: /bin/sh
+  #
+  # presto:
+  #   build: ./presto
+  #   ports:
+  #   - 8080:8080

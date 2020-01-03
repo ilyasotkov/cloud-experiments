@@ -18,7 +18,8 @@ RUN apt-get update && apt-get install -qq -y python libpostgresql-jdbc-java
 
 COPY conf ${HIVE_HOME}/conf
 COPY conf/core-site.xml ${HADOOP_HOME}/etc/hadoop/
-COPY start.sh .
+COPY start-metastore.sh .
+COPY start-webhcat.sh .
 RUN groupadd -r hive --gid=1000 && \
     useradd -r -g hive --uid=1000 -d ${HIVE_HOME} hive && \
     chown hive:hive -R ${HIVE_HOME}
@@ -26,4 +27,4 @@ RUN groupadd -r hive --gid=1000 && \
 USER hive
 WORKDIR $HIVE_HOME
 ENV PYTHON_CMD=/usr/bin/python
-ENTRYPOINT ["/opt/start.sh"]
+ENTRYPOINT ["/opt/start-metastore.sh"]

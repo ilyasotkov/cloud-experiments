@@ -18,10 +18,7 @@ services:
       WEBHCAT_LOG_DIR: /opt/apache-hive-3.1.2-bin/log/
     volumes:
     - ./tmp:/opt/apache-hive-3.1.2-bin/log/
-    entrypoint: /opt/apache-hive-3.1.2-bin/hcatalog/sbin/webhcat_server.sh
-    # entrypoint: /bin/sh
-    command:
-    - foreground
+    entrypoint: /opt/start-webhcat.sh
 
   minio:
     image: minio/minio:RELEASE.2019-12-30T05-45-39Z

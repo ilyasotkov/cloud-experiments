@@ -46,8 +46,8 @@ services:
   mc:
     image: minio/mc
     entrypoint: /bin/sh
-  #
-  # presto:
-  #   build: ./presto
-  #   ports:
-  #   - 8080:8080
+  
+  presto:
+    build: ./presto
+    ports:
+    - 8080:8080

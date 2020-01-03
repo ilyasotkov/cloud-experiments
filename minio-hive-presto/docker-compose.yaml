@@ -14,8 +14,6 @@ services:
     build: ./metastore
     ports:
     - 50111:50111
-    environment:
-      WEBHCAT_LOG_DIR: /opt/apache-hive-3.1.2-bin/log/
     volumes:
     - ./tmp:/opt/apache-hive-3.1.2-bin/log/
     entrypoint: /opt/start-webhcat.sh
@@ -39,3 +37,10 @@ services:
     build: ./presto
     ports:
     - 8080:8080
+
+  tests:
+    build:
+      context: ./test
+      dockerfile: Dockerfile
+    entrypoint: pytest --log-cli-level=INFO
+    command: e2e.py

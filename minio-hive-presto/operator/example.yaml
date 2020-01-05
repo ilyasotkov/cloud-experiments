@@ -1,3 +1,5 @@
+# Concept for metastore-operator backed by a postgresql database
+
 apiVersion: acid.zalan.do/v1
 kind: postgresql
 metadata:
@@ -29,7 +31,7 @@ spec:
   dbConnection:
     secretName: ""
   thiftServer:
-    image: registry.flexp.io/hive:3.1.2
+    image: registry.flexp.live/hive:3.1.2
     conf: {}
     configMap: {}
     service:

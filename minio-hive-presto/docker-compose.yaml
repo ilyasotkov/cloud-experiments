@@ -1,0 +1,46 @@
+version: "3.7"
+
+services:
+
+  db:
+    image: postgres
+    environment:
+      POSTGRES_DB: default
+
+  metastore:
+    build: ./metastore
+
+  webhcat:
+    build: ./metastore
+    ports:
+    - 50111:50111
+    volumes:
+    - ./tmp:/opt/apache-hive-3.1.2-bin/log/
+    entrypoint: /opt/start-webhcat.sh
+
+  minio:
+    image: minio/minio:RELEASE.2019-12-30T05-45-39Z
+    ports:
+    - 9000:9000
+    environment:
+      MINIO_ACCESS_KEY: minio
+      MINIO_SECRET_KEY: minio123
+    command: server /minio-data
+    volumes:
+    - ./data:/minio-data
+
+  mc:
+    image: minio/mc
+    entrypoint: /bin/sh
+
+  presto:
+    build: ./presto
+    ports:
+    - 8080:8080
+
+  tests:
+    build:
+      context: ./test
+      dockerfile: Dockerfile
+    entrypoint: pytest --log-cli-level=INFO
+    command: e2e.py

@@ -1,0 +1,4 @@
+data/
+tmp/
+metastore/lib/*
+!metastore/lib/.keep
